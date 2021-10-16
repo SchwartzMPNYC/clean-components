@@ -23,8 +23,8 @@ export default class CleanSlider extends BaseCustomEl {
 	public set value(newValue) {
 		this.state.value = Number(newValue);
 		// probably better to manage this explicitly like I've got commented out here, but testing using the binding for it in the template
-		// this.rangeInput.value = this.value;
-		// this.numberInput.value = this.value;
+		this.rangeInput.value = this.value;
+		this.numberInput.value = this.value;
 		this.updateCssVars();
 	}
 
