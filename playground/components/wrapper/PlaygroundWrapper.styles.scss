@@ -5,9 +5,21 @@
 #return {
 	position: fixed;
 	bottom: 1rem;
-	right: .5rem;
+	right: 0.5rem;
+	z-index: 9999;
+
+	color: var(--light);
+	// todo: placeholder color
+	background-color: darkblue;
+	padding: 0.5em 0.75em;
+	border-radius: 1.4em;
+
+	&:focus-visible {
+		// todo: find something less ugly.
+		outline: 4px solid darkorange;
+	}
 
 	&::before {
-		content: '\21AB'' ';
+		content: "\21AB"" ";
 	}
 }
