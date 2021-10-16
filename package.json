@@ -4,7 +4,8 @@
 	"description": "Component library meant to be cleaner than some of my other weird explorations while still mainting some handy features... we'll see how that goes.",
 	"scripts": {
 		"build": "parcel build",
-		"watch": "parcel watch"
+		"watch": "parcel watch",
+		"around": "parcel index.html"
 	},
 	"keywords": [
 		"webcomponents",
@@ -19,10 +20,7 @@
 		"parcel": "^2.0.0",
 		"typescript": "^4.4.4"
 	},
-	"source": [
-		"index.ts",
-		"index.html"
-	],
+	"source": "index.ts",
 	"main": "dist/index.js",
 	"module": "dist/module.js",
 	"browserslist": "> 0.5%, last 2 versions, not dead"
