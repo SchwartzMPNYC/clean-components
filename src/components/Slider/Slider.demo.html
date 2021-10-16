@@ -4,20 +4,18 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<script src="./Slider.component.ts" type="module"></script>
-		<link rel="stylesheet" href="~/playground/playground.styles.scss" />
-		<title>Slider</title>
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
 	</head>
 	<body>
-		<h1>Slider</h1>
-
-		<div style="display: flex;">
-			<clean-slider style="--slider-primary-color: #f00; --slider-thumb-color: #6B0000" value="50" name="red"></clean-slider>
-			<clean-slider style="--slider-primary-color: #060; --slider-thumb-color: #0f0" name="green"></clean-slider>
-			<clean-slider style="--slider-primary-color: #00f; --slider-thumb-color: #8F8FFF" name="blue"></clean-slider>
-			<clean-slider max="1" step="0.01" name="alpha" value="1"></clean-slider>
-		</div>
-
-		<a href="../../../index.html">Return to playground</a>
+		
+		<playground-wrapper component-name="Slider">
+			<script src="./Slider.component.ts" type="module"></script>
+			<div style="display: flex;">
+				<clean-slider style="--slider-primary-color: #f00; --slider-thumb-color: #6B0000" value="50" name="red"></clean-slider>
+				<clean-slider style="--slider-primary-color: #060; --slider-thumb-color: #0f0" name="green"></clean-slider>
+				<clean-slider style="--slider-primary-color: #00f; --slider-thumb-color: #8F8FFF" name="blue"></clean-slider>
+				<clean-slider max="1" step="0.01" name="alpha" value="1"></clean-slider>
+			</div>
+		</playground-wrapper>
 	</body>
 </html>
