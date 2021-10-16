@@ -15,7 +15,7 @@ const define =
 
 		if (styles) klass.constructedSheet = prepStyleSheet(styles);
 
-		klass.observedAttributes = observedAttributes;
+		if (observedAttributes) klass.observedAttributes = observedAttributes;
 
 		customElements.define(tagName, klass);
 	};
