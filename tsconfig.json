@@ -1,0 +1,10 @@
+{
+	"compilerOptions": {
+		"target": "es2021",
+		"experimentalDecorators": true,
+		"moduleResolution": "node"
+	},
+	
+	"include": ["src/**/*", "./types.d.ts"],
+	"exclude": ["node_modules", "**/*.spec.ts"],
+}

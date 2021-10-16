@@ -1,0 +1,29 @@
+{
+	"name": "clean-components",
+	"version": "1.0.0",
+	"description": "Component library meant to be cleaner than some of my other weird explorations while still mainting some handy features... we'll see how that goes.",
+	"scripts": {
+		"build": "parcel build",
+		"watch": "parcel watch"
+	},
+	"keywords": [
+		"webcomponents",
+		"typescript",
+		"accessible"
+	],
+	"author": "Mike Schwartz",
+	"license": "ISC",
+	"devDependencies": {
+		"@parcel/transformer-inline-string": "^2.0.0",
+		"@parcel/transformer-sass": "^2.0.0",
+		"parcel": "^2.0.0",
+		"typescript": "^4.4.4"
+	},
+	"source": [
+		"index.ts",
+		"index.html"
+	],
+	"main": "dist/index.js",
+	"module": "dist/module.js",
+	"browserslist": "> 0.5%, last 2 versions, not dead"
+}

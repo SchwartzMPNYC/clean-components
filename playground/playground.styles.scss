@@ -1,0 +1,18 @@
+*,
+::before,
+::after {
+	box-sizing: border-box;
+	font-family: system-ui;
+}
+
+:root {
+	--dark: #2c303a;
+	--light: #f3f3f3;
+}
+
+body {
+	background-color: var(--light);
+	color: var(--dark);
+	width: 80rem;
+	width: clamp(320px, 80rem, 90vw);
+}

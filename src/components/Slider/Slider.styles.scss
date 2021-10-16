@@ -1,0 +1,112 @@
+@mixin slider-thumb {
+	background-color: var(--slider-thumb-color, #949494);
+	border: 1px solid var(--slider-primary-color, black);
+	border-radius: 0;
+	height: 1rem;
+	margin-top: -0.25rem;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	transition: transform 0.15s;
+	transform: scale(1.4);
+}
+
+@mixin focused-slider {
+	border-width: 2px;
+	border: 1px solid var();
+	opacity: 1;
+	transform: scale(1.6);
+}
+
+@mixin slider-track {
+	height: 50%;
+	border: 2px solid var(--slider-primary-color, black);
+	border-radius: 3px;
+
+	background: linear-gradient(
+		90deg,
+		var(--slider-primary-color, black),
+		var(--slider-primary-color, black) var(--offset),
+		var(--slider-unfilled, transparent) var(--offset),
+		var(--slider-unfilled, transparent)
+	);
+}
+
+:host {
+	display: flex;
+	flex-direction: column;
+	max-width: fit-content;
+	margin: 0.5rem;
+	position: relative;
+}
+
+[type="range"] {
+	-webkit-appearance: none;
+	height: 1.5rem;
+	width: 100%;
+	background: transparent;
+	cursor: pointer;
+
+	&::-webkit-slider-thumb {
+		@include slider-thumb;
+
+		-webkit-appearance: none;
+		// height: 100%;
+	}
+
+	&::-moz-range-thumb {
+		@include slider-thumb;
+	}
+
+	&::-webkit-slider-runnable-track {
+		@include slider-track;
+	}
+
+	&::-moz-range-track {
+		@include slider-track;
+	}
+
+	&:focus-visible {
+		outline: none;
+
+		&::-webkit-slider-thumb {
+			@include focused-slider;
+		}
+
+		&::-moz-range-thumb {
+			@include focused-slider;
+		}
+	}
+}
+
+[type="number"] {
+	--width: calc(var(--length, 3) * 1ch + 0.5ch);
+
+	position: relative;
+	left: MAX(var(--offset), 0.5ch);
+	transform: translateX(calc(var(--offset) * -1));
+	margin: 0;
+	width: var(--width);
+	border: 0;
+	text-align: center;
+	background-color: transparent;
+
+	// Make this look like a standard textfield
+	appearance: textfield;
+	&::-webkit-inner-spin-button,
+	&::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+	}
+
+	&:focus-visible {
+		outline: 1px solid var(--slider-primary-color, black);
+	}
+
+	&:invalid {
+		outline: 1px solid var(--slider-primary-color, black);
+	}
+
+	&::selection {
+		background-color: var(--slider-primary-color, black);
+		color: #fff;
+	}
+}
