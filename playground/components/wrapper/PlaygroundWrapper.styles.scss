@@ -1,0 +1,13 @@
+:host {
+	display: block;
+}
+
+#return {
+	position: fixed;
+	bottom: 1rem;
+	right: .5rem;
+
+	&::before {
+		content: '\21AB'' ';
+	}
+}
