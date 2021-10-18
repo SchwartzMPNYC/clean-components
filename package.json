@@ -23,5 +23,6 @@
 	"source": "index.ts",
 	"main": "dist/index.js",
 	"module": "dist/module.js",
+	"type": "module",
 	"browserslist": "> 0.5%, last 2 versions, not dead"
 }
