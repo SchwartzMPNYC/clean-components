@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Tabs</title>
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
+	</head>
+	<body>
+		<playground-wrapper component-name="Tabs">
+			<script src="./Tabs.component.ts" type="module"></script>
+			<script src="./Tab.component.ts" type="module"></script>
+
+			<h2>Default example</h2>
+
+			<p>
+				The <code>clean-tabs</code> component can be used with <code>clean-tab</code> children (reccomended), or
+				with any group of child elements.
+			</p>
+
+			<h3>With <code>clean-tab</code> children</h3>
+			<p>The <code>clean-tab</code> component can be used (and is suggested) for your tab content.</p>
+			<figure>
+				<figcaption><code>clean-tabs</code> with <code>clean-tab</code> tab elements.</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-tabs>
+						<clean-tab>Tab 1</clean-tab>
+						<clean-tab selected>Tab 2</clean-tab>
+						<clean-tab>Tab 3</clean-tab>
+					</clean-tabs>
+				</div>
+			</figure>
+
+			<h2>With generic children</h2>
+			<style>
+				clean-tabs.generic-children [aria-selected="true"] {
+					font-weight: bold;
+				}
+
+				clean-tabs.generic-children > span {
+					border: 1px solid var(--dark);
+				}
+			</style>
+
+			<p>
+				Non-<code>clean-tab</code> children are also available for use, but are not quite as fully featured. (<a
+					href="#setting-selected_attributes"
+					>See section on setting selected state with attributes.</a
+				>)
+			</p>
+
+			<figure style="margin-bottom: 1rem">
+				<figcaption><code>clean-tabs</code> with <code>button</code> tab elements.</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-tabs class="generic-children">
+						<button>Tab 1</button>
+						<button clean-selected>Tab 2</button>
+						<button>Tab 3</button>
+					</clean-tabs>
+				</div>
+			</figure>
+
+			<figure>
+				<figcaption><code>clean-tabs</code> with <code>span</code> tab elements.</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-tabs class="generic-children">
+						<span>Tab 1</span>
+						<span clean-selected>Tab 2</span>
+						<span>Tab 3</span>
+					</clean-tabs>
+				</div>
+			</figure>
+
+			<p>
+				The <code>clean-tabs</code> component will still manage the <code>role</code>,
+				<code>aria-selected</code>, and <code>tabIndex</code> attributes for each child element.
+			</p>
+
+			<p>
+				The library provides no styling for non-<code>clean-tab</code> children. Any non-browser default styling
+				seen here has been added only to this page for demonstration purposes.
+			</p>
+
+			<h2>Interactions</h2>
+			<h3>Setting the selected tab</h3>
+			<h4>Externally</h4>
+
+			<p>
+				You can use the <code>selectedIndex</code> property or the <code>selected-index</code> attribute to set
+				the selected tab.
+			</p>
+
+			<figure>
+				<figcaption>Setting the <code>selectedIndex</code> property</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-tabs id="externally-setting">
+						<clean-tab>Tab 1</clean-tab>
+						<clean-tab selected>Tab 2</clean-tab>
+						<clean-tab>Tab 3</clean-tab>
+					</clean-tabs>
+
+					<label for="external-tab-set"
+						><code>selectedIndex</code> property for <code>clean-tab</code>:
+					</label>
+					<input type="number" id="external-tab-set" max="2" min="0" value="1" />
+
+					<script>
+						const tabs = document.querySelector("clean-tabs#externally-setting");
+						const tabChanger = document.querySelector("#external-tab-set");
+						tabChanger.addEventListener("change", ({ target }) => {
+							tabs.selectedIndex = target.value;
+						});
+
+						tabs.addEventListener("tabselection", ({ detail }) => (tabChanger.value = detail.tabIndex));
+					</script>
+				</div>
+			</figure>
+
+			<h4 id="setting-selected_attributes">Using attributes on the tabs</h4>
+			<h5><code>clean-tab</code> children</h5>
+			<p>
+				When using <code>clean-tab</code> children you can change the selected tab by setting the
+				<code>selected</code> boolean attribute or the <code>selected</code> property a tab; this will
+				automatically clear the currently selected tab as well, so only one operation is required.
+			</p>
+
+			<h5>Generic children</h5>
+			<p>
+				You may set the <em>initially</em> selected tab using the <code>clean-selected</code> boolean attribute
+				on an element. After initial selection is set, attribute is removed, and the elements will not respond
+				to new instances of it.
+			</p>
+
+			<h3>Events</h3>
+			<p>
+				The <code>clean-tabs</code> component will emit a <code>tabselection</code> custom event when a tab
+				selection is made.
+			</p>
+			<p id="events_tabs_tabselection">
+				The <code>detail</code> property of the <code>tabselection</code> event:
+			</p>
+			<dl>
+				<dt><code>tab</code></dt>
+				<dd>A reference to the tab that was selected.</dd>
+				<dt>tabIndex</dt>
+				<dd>The index of the tab that was selected.</dd>
+			</dl>
+
+			<p>
+				The tab children (either <code>clean-tab</code> components or not) will emit a
+				<code>tabselectedstatechange</code> when selected. While this is mostly intended for the
+				<code>clean-tabs</code> component to hook into, it an also be accessed externally.
+			</p>
+			<p id="events_tab_tabselectedstatechange">
+				The <code>detail</code> property of the <code>tabselectedstatechange</code> event:
+			</p>
+			<dl aria-labelledby="events_tab_tabselectedstatechange">
+				<dt><code>tab</code></dt>
+				<dd>A reference to the tab that was selected.</dd>
+				<dt><code>isAttrRemoval</code></dt>
+				<dd>
+					An optional key that lets us know if the event was triggered by a <code>selected</code> attribute
+					being removed rather than a selected tab being set.
+				</dd>
+			</dl>
+
+			<h3>Manual activation mode</h3>
+			<figure>
+				<figcaption><code>clean-tabs</code> with <code>manual-activation</code> attribute.</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-tabs manual-activation>
+						<clean-tab>Tab 1</clean-tab>
+						<clean-tab selected>Tab 2</clean-tab>
+						<clean-tab>Tab 3</clean-tab>
+					</clean-tabs>
+				</div>
+			</figure>
+
+			<p>
+				<a href="https://www.w3.org/TR/wai-aria-practices-1.1/examples/tabs/tabs-2/tabs.html"
+					>WCAG shows a tab variant where a tab can be keyboard focused without selecting it.</a
+				>
+				Use the <code>manual-activation</code> boolean attribute or set the
+				<code>manualActivation</code> property to trigger this mode.
+			</p>
+
+			<h2>Styling</h2>
+			<p>
+				Like all Clean-Components, both the <code>clean-tabs</code> and <code>clean-tab</code> components were
+				build using a number of css custom properties, allowing for customization of specfic rules.
+			</p>
+			<p>
+				<em>However</em>, the <code>clean-tabs</code> and <code>clean-tab</code> components are also both
+				completely flat in markup; this means that you can style them just like you would any standard builtin
+				element.
+			</p>
+
+			<h3 id="custom-properties_tabs"><code>clean-tabs</code> custom properties</h3>
+			<dl aria-labelledby="custom-properties_tabs">
+				<dt><code>--tabs-gap</code></dt>
+				<dd>Sets the <code>gap</code> property for spacing between tabs.</dd>
+				<dt><code>--tabs-border_color</code></dt>
+				<dd>Sets the tablist border color.</dd>
+				<dt><code>--tabs-border-radius</code></dt>
+				<dd>Sets the border radius on the tab list.</dd>
+				<dt><code>--tabs-padding</code></dt>
+				<dd>Sets the padding on the tab list.</dd>
+			</dl>
+
+			<h3 id="custom-properties_tab"><code>clean-tab</code> custom properties</h3>
+			<dl aria-labelledby="custom-properties_tab">
+				<dt><code>--tab-bg-color</code></dt>
+				<dd>Sets background color for the tab.</dd>
+				<dt><code>--tab-border-color</code></dt>
+				<dd>Sets the border color for the tab.</dd>
+				<dt><code>--tab-highlight-color</code></dt>
+				<dd>Sets the flashy color used the shadow indicator and text color when selected.</dd>
+				<dt><code>--tab-bg-color_selected</code></dt>
+				<dd>Sets the background color for selected tabs.</dd>
+			</dl>
+		</playground-wrapper>
+	</body>
+</html>

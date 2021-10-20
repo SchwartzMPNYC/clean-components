@@ -1,0 +1,9 @@
+:host {
+	display: flex;
+	width: fit-content;
+	
+	gap: var(--tabs-gap, .3rem);
+	border: .1em solid var(--tabs-border_color, var(--dark));
+	border-radius: var(--tabs-border-radius, .2em);
+	padding: var(--tabs-padding, .1em);
+}

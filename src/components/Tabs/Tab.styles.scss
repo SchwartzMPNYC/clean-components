@@ -1,0 +1,21 @@
+// TODO: systemize colors
+:host {
+	display: inline-block;
+	border-radius: 0.2em;
+	background-color: var(--tab-bg-color, azure);
+	cursor: pointer;
+	user-select: none;
+	border: .1em solid var(--tab-border-color, var(--dark));
+	padding: .2em;
+}
+
+:host-context([aria-selected="true"]) {
+	color: var(--tab-highlight-color, aqua);
+	background-color: var(--tab-bg-color_selected, var(--dark));
+	box-shadow: inset var(--tab-highlight-color, aqua) 0 0.1em 0 0;
+}
+
+:host-context(:focus-visible) {
+	// todo: find something less ugly.
+	outline: 4px solid darkorange;
+}
