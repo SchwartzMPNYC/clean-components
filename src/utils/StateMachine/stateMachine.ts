@@ -147,13 +147,14 @@ const stateMachine = (target) => {
 			});
 
 			target.reflecting = true;
-			if (target.constructor.reflect?.includes(prop)) {
-				target.setAttribute(prop, newVal);
+			const transformedProp = propTransform(prop as string);
+			if (target.constructor.reflect?.includes(transformedProp)) {
+				target.setAttribute(transformedProp, newVal);
 			}
 
-			if (target.constructor.booleanReflect?.includes(prop)) {
-				if (newVal) target.setAttribute(prop, "");
-				else target.removeAttribute(prop);
+			if (target.constructor.booleanReflect?.includes(transformedProp)) {
+				if (newVal) target.setAttribute(transformedProp, "");
+				else target.removeAttribute(transformedProp);
 			}
 			target.reflecting = false;
 
