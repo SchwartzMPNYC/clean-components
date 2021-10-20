@@ -10,32 +10,42 @@
 		<playground-wrapper component-name="Slider">
 			<script src="./Slider.component.ts" type="module"></script>
 
-			<h2>In a grid</h2>
-			<div style="display: flex; gap: 0.5rem">
-				<clean-slider
-					style="--slider-primary-color: #f00; --slider-thumb-color: #6b0000"
-					value="50"
-					name="red"
-				></clean-slider>
-				<clean-slider
-					style="--slider-primary-color: #060; --slider-thumb-color: #0f0"
-					name="green"
-				></clean-slider>
-				<clean-slider
-					style="--slider-primary-color: #00f; --slider-thumb-color: #8f8fff"
-					name="blue"
-				></clean-slider>
-				<clean-slider max="1" step="0.01" name="alpha" value="1"></clean-slider>
-			</div>
+			<h2>Examples</h2>
+			
+			
+			<figure>
+				<figcaption>Several sliders displayed as a group using grid.</figcaption>
+				<div class="fig-content-wrapper">
+					<div style="display: flex; gap: 0.5rem">
+						<clean-slider
+							style="--slider-primary-color: #f00; --slider-thumb-color: #6b0000"
+							value="50"
+							name="red"
+						></clean-slider>
+						<clean-slider
+							style="--slider-primary-color: #060; --slider-thumb-color: #0f0"
+							name="green"
+						></clean-slider>
+						<clean-slider
+							style="--slider-primary-color: #00f; --slider-thumb-color: #8f8fff"
+							name="blue"
+						></clean-slider>
+						<clean-slider max="1" step="0.01" name="alpha" value="1"></clean-slider>
+					</div>
+				</div>
+			</figure>
 
 			<h2>Full width</h2>
-			<div>
-				<clean-slider name="Score" max="100"></clean-slider>
-			</div>
+			<figure>
+				<figcaption>A slider taking up the whole width of it's parent.</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-slider name="Score" max="100"></clean-slider>
+				</div>
+			</figure>
 
 			<h2>Attributes</h2>
 			<!-- TODO: document this -->
-			<p>Comming soon™️</p>
+			<p>Coming soon™️</p>
 
 			<h2>Styling</h2>
 			<p>
@@ -55,9 +65,10 @@
 					see the whole event.
 				</figcaption>
 
-				<clean-slider name="SliderName" max="50" id="event-slider" style="width: 10rem"></clean-slider>
-
-				<code id="event-output" style="display: block; padding: 1.5rem 0"> Event not yet triggered. </code>
+				<div class="fig-content-wrapper">
+					<clean-slider name="SliderName" max="50" id="event-slider" style="width: 10rem"></clean-slider>
+					<code id="event-output" style="display: block; padding: 1.5rem 0"> Event not yet triggered. </code>
+				</div>
 
 				<script>
 					const codeBlock = document.querySelector("#event-output");

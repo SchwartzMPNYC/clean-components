@@ -22,18 +22,39 @@ code {
 }
 
 figure {
-	border: 1px solid var(--dark);
+	border: 0.2em solid var(--dark);
 	border-inline-start-width: 1em;
+	border-radius: 0.2em;
 	margin: 0;
+
+	display: flex;
+	flex-direction: column;
+
+	width: clamp(320px, 100%, 80ch);
 
 	figcaption {
 		background-color: var(--dark);
 		color: var(--light);
 		padding: 0.3em 0;
-		margin-block-end: 0.75em;
 	}
 
-	> *:not(figcaption) {
-		margin-inline-start: 2em;
+	.fig-content-wrapper {
+		margin: 1em;
 	}
+}
+
+dl {
+	border: 0.2em solid var(--dark);
+	border-radius: 0.2em;
+	width: clamp(320px, 100%, 80ch);
+}
+
+dt {
+	color: var(--light);
+	background-color: var(--dark);
+}
+
+dt,
+dd {
+	padding: 0.1em 0.3em 0.4em;
 }
