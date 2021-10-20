@@ -4,6 +4,7 @@ class BaseCustomEl extends HTMLElement {
 	protected state;
 	protected shadow: ShadowRoot;
 	protected template;
+	protected reflecting = false;
 
 	constructor() {
 		super();

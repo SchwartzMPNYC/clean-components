@@ -11,6 +11,9 @@ const frameWorkPipes = {
 		)
 };
 
+const propTransform = (prop: string) => 
+	prop.replaceAll(/[A-Z]/g, match => '-' + match.toLowerCase());
+
 // All binding stuff is very experimental.
 const stateMachine = (target) => {
 	const pipeGenerator = (el) =>
@@ -123,7 +126,6 @@ const stateMachine = (target) => {
 				({ node, pipes }) => (node.textContent = pipes?.(newVal) ?? newVal)
 			);
 			watchedData[prop].value = newVal;
-			// console.log(target, watchedData)
 
 			// 	set slot text bindings
 			watchedSlots[prop].bindings.forEach(({ nodes, pipes }) => {
@@ -144,6 +146,7 @@ const stateMachine = (target) => {
 				else node.removeAttribute(prop);
 			});
 
+			target.reflecting = true;
 			if (target.constructor.reflect?.includes(prop)) {
 				target.setAttribute(prop, newVal);
 			}
@@ -152,6 +155,7 @@ const stateMachine = (target) => {
 				if (newVal) target.setAttribute(prop, "");
 				else target.removeAttribute(prop);
 			}
+			target.reflecting = false;
 
 			return !!watchedData[prop];
 		},
