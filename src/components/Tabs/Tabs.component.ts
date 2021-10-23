@@ -1,13 +1,11 @@
-import define from "../../utils/decorators/define/Define";
+import { define } from "../../utils/decorators/define/Define";
 import BaseCustomEl from "../Base/Base";
 import styles from "bundle-text:./Tabs.styles.scss";
 import Tab, { TabChild, TabselectedstatechangeEventDetails } from "./Tab.component";
 
-const markup = `<slot></slot>`;
 const observedAttributes = ["selected-index", "manual-activation"];
 
 @define("clean-tabs", {
-	markup,
 	styles,
 	observedAttributes,
 })
@@ -58,7 +56,7 @@ export default class Tabs extends BaseCustomEl {
 			const preselectedState = Tab.tabPreselectedState(tab);
 			// Make sure our tab is initialized for non-clean-tab tabs
 			if (!(tab instanceof Tab)) Tab.initTab(tab, preselectedState);
-			
+
 			// If tab has a preselected attribute set it to the selected val
 			if (preselectedState) {
 				this.state.selectedIndex = tabIndex;

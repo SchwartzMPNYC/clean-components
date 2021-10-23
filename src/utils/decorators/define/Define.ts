@@ -1,13 +1,13 @@
 import prepStyleSheet from "./prepStyleSheet";
 
 interface definitionMetaData {
-	markup: string;
+	markup?: string;
 	styles?: string;
 	observedAttributes?: string[];
 }
 
-const define =
-	(tagName: string, { markup, styles, observedAttributes }: definitionMetaData) =>
+export const define =
+	(tagName: string, { markup = '<slot></slot>', styles, observedAttributes }: definitionMetaData) =>
 	klass => {
 		const template = document.createElement("template");
 		template.innerHTML = markup;
@@ -19,5 +19,3 @@ const define =
 
 		customElements.define(tagName, klass);
 	};
-
-export default define;

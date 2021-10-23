@@ -1,8 +1,7 @@
-import define from "../../utils/decorators/define/Define";
+import { define } from "../../utils/decorators/define/Define";
 import BaseCustomEl from "../Base/Base";
 import styles from "bundle-text:./Tab.styles.scss";
 
-const markup = `<slot></slot>`;
 const observedAttributes = ["selected"];
 
 export type TabChild = HTMLElement | Tab;
@@ -12,7 +11,6 @@ export type TabselectedstatechangeEventDetails = {
 };
 
 @define("clean-tab", {
-	markup,
 	styles,
 	observedAttributes,
 })

@@ -1,4 +1,4 @@
-import define from "../../../src/utils/decorators/define/Define";
+import { define } from "../../../src/utils/decorators/define/Define";
 import BaseCustomEl from "../../../src/components/Base/Base";
 import markup from "bundle-text:./PlaygroundWrapper.template.html";
 import styles from "bundle-text:./PlaygroundWrapper.styles.scss";
