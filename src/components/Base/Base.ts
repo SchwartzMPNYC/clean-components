@@ -1,6 +1,6 @@
 import stateMachine from "../../utils/StateMachine/stateMachine";
 
-class BaseCustomEl extends HTMLElement {
+export default class BaseCustomEl extends HTMLElement {
 	protected state;
 	protected shadow: ShadowRoot;
 	protected template;
@@ -30,5 +30,3 @@ class BaseCustomEl extends HTMLElement {
 		Object.entries(this.state).forEach(([key, value]) => (this.state[key] = value ?? this[key]));
 	}
 }
-
-export default BaseCustomEl;
