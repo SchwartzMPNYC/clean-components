@@ -5,7 +5,9 @@
 	"scripts": {
 		"build": "parcel build",
 		"watch": "parcel watch",
-		"around": "parcel index.html"
+		"around": "parcel index.html",
+		"clean": "rm -rf dist .parcel-cache",
+		"check": "tsc --noEmit"
 	},
 	"keywords": [
 		"webcomponents",
@@ -15,14 +17,17 @@
 	"author": "Mike Schwartz",
 	"license": "ISC",
 	"devDependencies": {
+		"@parcel/packager-ts": "^2.0.0",
 		"@parcel/transformer-inline-string": "^2.0.0",
 		"@parcel/transformer-sass": "^2.0.0",
+		"@parcel/transformer-typescript-types": "^2.0.0",
 		"parcel": "^2.0.0",
 		"typescript": "^4.4.4"
 	},
 	"source": "index.ts",
 	"main": "dist/index.js",
 	"module": "dist/module.js",
+	"types": "dist/types.d.ts",
 	"type": "module",
 	"browserslist": "> 0.5%, last 2 versions, not dead"
 }
