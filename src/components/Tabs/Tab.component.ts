@@ -1,6 +1,6 @@
 import { define } from "../../utils/decorators/define/Define";
 import BaseCustomEl from "../Base/Base";
-import styles from "bundle-text:./Tab.styles.scss";
+import styles from "./Tab.styles.scss";
 
 const observedAttributes = ["selected"];
 

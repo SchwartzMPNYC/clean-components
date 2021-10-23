@@ -1,0 +1,12 @@
+{
+	"extends": "@parcel/config-default",
+	"transformers": {
+		"*.template.html": [
+			"@parcel/transformer-inline-string"
+		],
+		"*.styles.scss": [
+			"@parcel/transformer-inline-string",
+			"..."
+		]
+	}
+}

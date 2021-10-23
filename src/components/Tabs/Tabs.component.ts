@@ -1,6 +1,6 @@
 import { define } from "../../utils/decorators/define/Define";
 import BaseCustomEl from "../Base/Base";
-import styles from "bundle-text:./Tabs.styles.scss";
+import styles from "./Tabs.styles.scss";
 import Tab, { TabChild, TabselectedstatechangeEventDetails } from "./Tab.component";
 
 const observedAttributes = ["selected-index", "manual-activation"];

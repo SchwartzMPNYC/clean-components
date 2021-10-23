@@ -1,7 +1,7 @@
 import { define } from "../../utils/decorators/define/Define";
 import BaseCustomEl from "../Base/Base";
-import markup from "bundle-text:./Slider.template.html";
-import styles from "bundle-text:./Slider.styles.scss";
+import markup from "./Slider.template.html";
+import styles from "./Slider.styles.scss";
 
 @define("clean-slider", {
 	markup,

@@ -1,7 +1,7 @@
 import { define } from "../../../src/utils/decorators/define/Define";
 import BaseCustomEl from "../../../src/components/Base/Base";
-import markup from "bundle-text:./PlaygroundWrapper.template.html";
-import styles from "bundle-text:./PlaygroundWrapper.styles.scss";
+import markup from "./PlaygroundWrapper.template.html";
+import styles from "./PlaygroundWrapper.styles.scss";
 
 import playgroundStyles from "bundle-text:../../playground.styles.scss";
 

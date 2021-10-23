@@ -1,7 +1,7 @@
 import { define } from "../../utils/decorators/define/Define";
 import BaseCustomEl from "../Base/Base";
-import markup from "bundle-text:./ExpandoCard.template.html";
-import styles from "bundle-text:./ExpandoCard.styles.scss";
+import markup from "./ExpandoCard.template.html";
+import styles from "./ExpandoCard.styles.scss";
 
 @define("clean-expando-card", {
 	markup,
