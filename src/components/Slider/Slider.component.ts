@@ -15,7 +15,14 @@ export default class CleanSlider extends BaseCustomEl {
 	// this makes it sprout min, max, step even if the attrs aren't set explicitly
 	private static reflect = ["min", "max", "step"];
 
-	private name: string;
+	// THIS was binding I think???  Must revert these changes and check
+	// private name: string;
+	public get name(): string {
+		return this.state.name;
+	}
+	public set name(newName: string) {
+		this.state.name = newName;
+	}
 
 	public get value() {
 		return this.state.value;
