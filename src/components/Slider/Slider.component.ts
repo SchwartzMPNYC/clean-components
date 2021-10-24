@@ -24,45 +24,45 @@ export default class CleanSlider extends BaseCustomEl {
 		this.state.name = newName;
 	}
 
-	public get value() {
+	public get value(): number {
 		return this.state.value;
 	}
-	public set value(newValue) {
+	public set value(newValue: number | string) {
 		this.state.value = Number(newValue);
-		// probably better to manage this explicitly like I've got commented out here, but testing using the binding for it in the template
-		this.rangeInput.value = this.value;
-		this.numberInput.value = this.value;
+		// I really don't wanna do a type conversion if the browser will do it implicitly.
+		this.rangeInput.value = this.value as unknown as string;
+		this.numberInput.value = this.value as unknown as string;
 		this.updateCssVars();
 	}
 
-	public get max() {
+	public get max(): number {
 		return this.state.max;
 	}
-	public set max(newValue) {
+	public set max(newValue: number | string) {
 		this.state.max = Number(newValue);
 		this.value = Math.max(this.min, Math.min(this.value, this.max));
 		this.updateCssVars();
 	}
 
-	public get min() {
+	public get min(): number {
 		return this.state.min;
 	}
-	public set min(newValue) {
+	public set min(newValue: number | string) {
 		this.state.min = Number(newValue);
 		this.value = Math.max(this.min, Math.min(this.value, this.max));
 		this.updateCssVars();
 	}
 
-	public get step() {
+	public get step(): number {
 		return this.state.step;
 	}
-	public set step(newValue) {
+	public set step(newValue: number | string) {
 		this.state.step = Number(newValue);
 		this.value = Math.max(this.min, Math.min(this.value, this.max));
 		this.updateCssVars();
 	}
 
-	private get offset() {
+	private get offset(): `${number}%` {
 		return `${((this.value - this.min) / (this.max - this.min)) * 100}%`;
 	}
 
