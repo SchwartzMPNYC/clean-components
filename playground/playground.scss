@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@450&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@250&display=swap');
+
 *,
 ::before,
 ::after {
@@ -5,8 +9,8 @@
 }
 
 :root {
-	--dark: #2c303a;
-	--light: #f3f3f3;
+	--dark: #181e2c;
+	--light: #f7f7f7;
 }
 
 body {
@@ -14,11 +18,16 @@ body {
 	color: var(--dark);
 	width: 80rem;
 	width: clamp(320px, 80rem, 90vw);
-	font-family: system-ui;
+	font-family: 'Mulish', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6, ::part(page-heading) {
+	font-family: 'Josefin Sans', sans-serif;
 }
 
 code {
-	font-size: 1.2em;
+	font-family: 'Fira Code', monospace;
+	font-size: .9em;
 }
 
 figure {

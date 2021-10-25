@@ -3,7 +3,7 @@ import BaseCustomEl from "../../../src/components/Base/Base";
 import markup from "./PlaygroundWrapper.template.html";
 import styles from "./PlaygroundWrapper.styles.scss";
 
-import playgroundStyles from "bundle-text:../../playground.styles.scss";
+// import playgroundStyles from "../../playground.styles.scss";
 
 const observedAttributes = ["component-name"];
 
@@ -18,21 +18,6 @@ export default class PlaygroundWrapper extends BaseCustomEl {
 	set componentName(name: string) {
 		this.state.componentName = name;
 		document.title = `${name} - Documentation`;
-	}
-
-	connectedCallback() {
-		// Add the playground styles to the page. I don't expect more than one of these to ever be used, but just being safe
-		if (!PlaygroundWrapper.playgroundSheet) {
-			PlaygroundWrapper.playgroundSheet = new CSSStyleSheet();
-
-			// TODO: typing
-			// @ts-expect-error
-			PlaygroundWrapper.playgroundSheet.replaceSync(playgroundStyles);
-
-			// TODO: typing
-			// @ts-expect-error
-			document.adoptedStyleSheets = [PlaygroundWrapper.playgroundSheet];
-		}
 	}
 
 	attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
