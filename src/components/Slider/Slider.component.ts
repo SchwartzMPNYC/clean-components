@@ -6,7 +6,7 @@ import styles from "./Slider.styles.scss";
 @define("clean-slider", {
 	markup,
 	styles,
-	observedAttributes: ["value", "min", "max", "step", "name"],
+	observedAttributes: ["value", "min", "max", "step", "label"],
 })
 export default class CleanSlider extends BaseCustomEl {
 	private rangeInput: HTMLInputElement = this.shadow.querySelector('[type="range"]');
@@ -17,11 +17,11 @@ export default class CleanSlider extends BaseCustomEl {
 
 	// THIS was binding I think???  Must revert these changes and check
 	// private name: string;
-	public get name(): string {
-		return this.state.name;
+	public get label(): string {
+		return this.state.label;
 	}
-	public set name(newName: string) {
-		this.state.name = newName;
+	public set label(newLabel: string) {
+		this.state.label = newLabel;
 	}
 
 	public get value(): number {
@@ -105,7 +105,7 @@ export default class CleanSlider extends BaseCustomEl {
 					this[name] = Number(newVal);
 					break;
 				case "name":
-					this.name = newVal;
+					this.label = newVal;
 			}
 		}
 	}
