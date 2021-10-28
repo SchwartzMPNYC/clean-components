@@ -1,6 +1,6 @@
 @mixin slider-thumb {
 	background-color: var(--slider-thumb-color, #949494);
-	border: 1px solid var(--slider-primary-color, black);
+	border: 1px solid var(--slider-border-color, var(--slider-primary-color, black));
 	border-radius: 0;
 	height: 1rem;
 	margin-top: -0.25rem;
@@ -19,7 +19,7 @@
 
 @mixin slider-track {
 	height: 50%;
-	border: 2px solid var(--slider-primary-color, black);
+	border: 2px solid var(--slider-border-color, var(--slider-primary-color, black));
 	border-radius: 3px;
 
 	background: linear-gradient(
