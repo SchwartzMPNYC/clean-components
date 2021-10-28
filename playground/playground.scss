@@ -74,3 +74,38 @@ dt,
 dd {
 	padding: 0.1em 0.3em 0.4em;
 }
+
+.badge {
+	padding: 0.2em 0.5em;
+	border-radius: 1em;
+	font-weight: 350;
+	// TODO: systematize color
+	background-color: var(--badge-color);
+	display: inline-block;
+	margin-block-end: 0.4em;
+	border: 0.1em double var(--dark);
+
+	&.string {
+		// TODO: systematize color
+		--badge-color: #eb5890;
+	}
+
+	&.number {
+		// TODO: systematize color
+		--badge-color: #61c5e4;
+	}
+
+	&.reflect {
+		// TODO: systematize color
+		--badge-color: #ade24b;
+	}
+
+	&.matching {
+		// TODO: systematize color
+		--badge-color: #73c57e;
+	}
+
+	+ .badge {
+		margin-inline-start: 0.2em;
+	}
+}
