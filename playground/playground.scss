@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@450&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@250&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@450&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@250;350&display=swap");
 
 *,
 ::before,
@@ -18,16 +18,23 @@ body {
 	color: var(--dark);
 	width: 80rem;
 	width: clamp(320px, 80rem, 90vw);
-	font-family: 'Mulish', sans-serif;
+	font-family: "Mulish", sans-serif;
+	font-weight: 250;
 }
 
-h1,h2,h3,h4,h5,h6, ::part(page-heading) {
-	font-family: 'Josefin Sans', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+::part(page-heading) {
+	font-family: "Josefin Sans", sans-serif;
 }
 
 code {
-	font-family: 'Fira Code', monospace;
-	font-size: .9em;
+	font-family: "Fira Code", monospace;
+	font-size: 0.9em;
 }
 
 figure {
