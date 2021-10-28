@@ -31,10 +31,29 @@
 	);
 }
 
+// This can be used if you want to set the inline layout using a CSS breakpoint or something
+@mixin inline-structure($label-selector: "&::part(label)", $input-selector: "&::part(input)") {
+	display: grid;
+	grid-template-columns: max-content auto;
+	gap: 0 0.5em;
+
+	#{$label-selector} {
+		grid-row: 2/3;
+	}
+
+	#{$input-selector} {
+		grid-column: 2;
+	}
+}
+
 :host {
 	display: flex;
 	flex-direction: column;
 	position: relative;
+}
+
+:host([in-line]) {
+	@include inline-structure('label', 'input');
 }
 
 [type="range"] {
