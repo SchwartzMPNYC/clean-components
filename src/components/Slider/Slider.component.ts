@@ -92,7 +92,7 @@ export default class CleanSlider extends BaseCustomEl {
 
 	private _handleInput = event => {
 		this.value = Math.min(Math.max(event.target.value, this.min), this.max);
-		this.dispatchEvent(new CustomEvent("update", { detail: { name: this.name, value: this.value } }));
+		this.dispatchEvent(new CustomEvent("update", { detail: { slider: this, value: this.value } }));
 	};
 
 	attributeChangedCallback(name, oldVal, newVal) {
