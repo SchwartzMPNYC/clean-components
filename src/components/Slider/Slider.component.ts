@@ -104,7 +104,7 @@ export default class CleanSlider extends BaseCustomEl {
 				case "step":
 					this[name] = Number(newVal);
 					break;
-				case "name":
+				case "label":
 					this.label = newVal;
 			}
 		}
