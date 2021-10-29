@@ -10,8 +10,8 @@ import styles from "./ExpandoCard.styles.scss";
 })
 export default class ExpandoCard extends BaseCustomEl {
 	private static booleanReflect = ["open"];
-	private _detailsEl = this.shadow.querySelector("details");
-	private _contentEl = this._detailsEl.querySelector(".details-content");
+	private _detailsEl: HTMLDetailsElement = this.shadow.querySelector("details");
+	private _contentEl: HTMLDivElement = this._detailsEl.querySelector(".details-content");
 
 	public get summary() {
 		return this.state.summary;
@@ -34,6 +34,11 @@ export default class ExpandoCard extends BaseCustomEl {
 	constructor() {
 		super();
 		this.open = this.hasAttribute("open");
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		this._detailsEl.addEventListener("toggle", () => (this.open = this._detailsEl.open));
 	}
 
 	attributeChangedCallback(name, oldVal, newVal) {
