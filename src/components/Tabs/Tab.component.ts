@@ -67,7 +67,7 @@ export default class Tab extends BaseCustomEl {
 	}
 
 	static setTabState(tab: TabChild, selected: boolean) {
-		tab.ariaSelected = selected ? "true" : "false";
+		tab.setAttribute('aria-selected', selected ? "true" : "false");
 		tab.tabIndex = selected ? 0 : -1;
 
 		if (tab instanceof Tab) tab.selected = selected;
