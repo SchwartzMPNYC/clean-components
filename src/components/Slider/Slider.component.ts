@@ -96,10 +96,7 @@ export default class CleanSlider extends BaseCustomEl {
 	};
 
 	private updateCssVars() {
-		// TODO: Typing
-		// @ts-expect-error
 		this.shadow.host.style.setProperty("--offset", this.offset);
-		// @ts-expect-error
-		this.shadow.host.style.setProperty("--length", this.width);
+		this.shadow.host.style.setProperty("--length", String(this.width));
 	}
 }

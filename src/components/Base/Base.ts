@@ -10,6 +10,7 @@ export interface BaseProps {
 
 export interface FullShadowRoot extends ShadowRoot {
 	adoptedStyleSheets: CSSStyleSheet[];
+	host: HTMLElement;
 }
 
 // TODO: This should probably go with propsTransformer
@@ -74,10 +75,14 @@ export default class BaseCustomEl extends HTMLElement {
 		switch (true) {
 			case this.handleBooleanAttrChanged(name, transformedAttr, newVal):
 				// TODO: I think that I don't actually *need* these NOOPs, but that the switch case is getting optomized out without them.
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				() => {};
+				// console.log(name, newVal);
 				break;
 			case this.handleAttrChanged(name, transformedAttr, newVal):
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				() => {};
+				// console.log(name, newVal);
 				break;
 		}
 	}
