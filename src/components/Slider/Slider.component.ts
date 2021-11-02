@@ -95,21 +95,6 @@ export default class CleanSlider extends BaseCustomEl {
 		this.dispatchEvent(new CustomEvent("update", { detail: { slider: this, value: this.value } }));
 	};
 
-	attributeChangedCallback(name, oldVal, newVal) {
-		if (oldVal !== newVal) {
-			switch (name) {
-				case "value":
-				case "min":
-				case "max":
-				case "step":
-					this[name] = Number(newVal);
-					break;
-				case "label":
-					this.label = newVal;
-			}
-		}
-	}
-
 	private updateCssVars() {
 		// TODO: Typing
 		// @ts-expect-error

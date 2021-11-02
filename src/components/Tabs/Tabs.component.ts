@@ -78,20 +78,6 @@ export default class Tabs extends BaseCustomEl {
 		super._initState();
 	}
 
-	attributeChangedCallback(name: string, oldVal: string, newVal: string) {
-		if (this.reflecting) return;
-		if (newVal === oldVal) return;
-
-		switch (name) {
-			case "selected-index":
-				this.selectedIndex = newVal;
-				break;
-
-			case "manual-activation":
-				this.manualActivation = newVal !== null;
-		}
-	}
-
 	private handleKeypress({ key }: KeyboardEvent): void {
 		switch (key) {
 			case "ArrowRight":
