@@ -40,10 +40,4 @@ export default class ExpandoCard extends BaseCustomEl {
 		super.connectedCallback();
 		this._detailsEl.addEventListener("toggle", () => (this.open = this._detailsEl.open));
 	}
-
-	attributeChangedCallback(name, oldVal, newVal) {
-		if (oldVal !== newVal && name === "open") {
-			this.state.open = newVal !== null;
-		}
-	}
 }
