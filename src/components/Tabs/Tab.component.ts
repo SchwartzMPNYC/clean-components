@@ -3,6 +3,7 @@ import BaseCustomEl from "../Base/Base";
 import styles from "./Tab.styles.scss";
 
 const observedAttributes = ["selected"];
+const stateKeys = ["selected"];
 
 export type TabChild = HTMLElement | Tab;
 export type TabselectedstatechangeEventDetails = {
@@ -13,24 +14,14 @@ export type TabselectedstatechangeEventDetails = {
 @define("clean-tab", {
 	styles,
 	observedAttributes,
+	stateKeys,
 })
 export default class Tab extends BaseCustomEl {
 	private static booleanReflect = ["selected"];
-
-	public get selected(): boolean {
-		return this.state.selected;
-	}
-	public set selected(newSelected: boolean) {
-		if (newSelected !== this.state.selected) {
-			this.state.selected = newSelected;
-		}
-	}
+	public selected: boolean = this.hasAttribute("selected");
 
 	connectedCallback() {
-		this.selected = this.hasAttribute("selected");
 		Tab.initTab(this, this.selected);
-
-		super._initState();
 	}
 
 	attributeChangedCallback(name: string, oldVal: string, newVal: string) {
@@ -67,7 +58,7 @@ export default class Tab extends BaseCustomEl {
 	}
 
 	static setTabState(tab: TabChild, selected: boolean) {
-		tab.setAttribute('aria-selected', selected ? "true" : "false");
+		tab.setAttribute("aria-selected", selected ? "true" : "false");
 		tab.tabIndex = selected ? 0 : -1;
 
 		if (tab instanceof Tab) tab.selected = selected;

@@ -6,8 +6,9 @@ import styles from "./PlaygroundWrapper.styles.scss";
 // import playgroundStyles from "../../playground.styles.scss";
 
 const observedAttributes = ["component-name"];
+const stateKeys = ["componentName"];
 
-@define("playground-wrapper", { markup, styles, observedAttributes })
+@define("playground-wrapper", { markup, styles, observedAttributes, stateKeys })
 export default class PlaygroundWrapper extends BaseCustomEl {
 	static playgroundSheet: CSSStyleSheet;
 

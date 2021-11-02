@@ -10,15 +10,24 @@
 	<body>
 		<playground-wrapper component-name="Expando Card">
 			<script src="./ExpandoCard.component.ts" type="module"></script>
-			<clean-expando-card>
-				<span slot="summary">Title about something or other</span>
-				<p>I'm more information about something or other, I can go on kinda long.</p>
-				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
-				<p>
-					Debitis, distinctio ducimus saepe cum quidem modi optio officia sapiente consectetur facilis eos neque
-					ipsa maxime ratione eaque sunt vel repellendus tempore!
-				</p>
-			</clean-expando-card>
+			<div style="display: flex; flex-direction: column; gap: 1em;">
+				<clean-expando-card>
+					<span slot="summary">Title about something or other</span>
+					<p>I'm more information about something or other, I can go on kinda long.</p>
+					<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
+					<p>
+						Debitis, distinctio ducimus saepe cum quidem modi optio officia sapiente consectetur facilis eos neque
+						ipsa maxime ratione eaque sunt vel repellendus tempore!
+					</p>
+				</clean-expando-card>
+				
+				<clean-expando-card open>
+					<span slot="summary">Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+					<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia voluptas corporis ab esse magnam voluptatibus reprehenderit culpa architecto nemo ipsum! Excepturi, temporibus corporis iure consequatur totam incidunt! Doloremque, officiis delectus.</p>
+					<p>Suscipit, neque. Soluta magnam odit porro sunt explicabo accusamus? Ut, quis iste magni non nesciunt architecto maiores delectus repudiandae cupiditate. At dolor dolorem ea eius odit provident molestias numquam autem.</p>
+					<p>Officiis dicta tempora hic quam eos id corporis eligendi beatae facilis perferendis recusandae quibusdam architecto voluptatum cum dolorem deleniti aliquid, amet vitae eius, consequuntur nemo, dolore tenetur iure adipisci. Necessitatibus?</p>
+				</clean-expando-card>
+			</div>
 		</playground-wrapper>
 	</body>
 </html>

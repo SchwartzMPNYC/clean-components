@@ -22,137 +22,74 @@
 
 const propTransform = (prop: string) => prop.replaceAll(/[A-Z]/g, match => "-" + match.toLowerCase());
 
-export type BindNode<T> = T extends HTMLElement ? HTMLElement : Text;
-export type BindingTypes = "text" | "attr" | "slot";
-
-export interface BindingPoint {
-	node?: BindNode<HTMLElement | Text>;
-	nodes?: HTMLElement[];
-}
-
-export interface DataBinding {
-	bindings: BindingPoint[];
-	type?: BindingTypes;
-	value?: string;
-}
-
-export interface DataBindings {
-	[key: string | symbol]: DataBinding;
-}
-
-function buildBindingPoint(binding: DataBinding, node: HTMLElement | Text, type: BindingTypes, value?): DataBinding;
-function buildBindingPoint(binding: DataBinding, node: HTMLElement[], type: BindingTypes, value?): DataBinding;
-function buildBindingPoint(
-	binding: DataBinding,
-	node: HTMLElement | Text | HTMLElement[],
-	type: BindingTypes,
-	value?
-): DataBinding {
-	return Array.isArray(node)
-		? { bindings: [...(binding?.bindings ?? []), { nodes: node }], type, value }
-		: { bindings: [...(binding?.bindings ?? []), { node }], type, value };
-}
-
-const watchedDataGenerator = (target: HTMLElement): DataBindings => {
-	return [...target.shadowRoot.querySelectorAll("clean-bind")].reduce((acc: DataBindings, el: HTMLElement) => {
-		// Get the value we're supposed to be binding to.
-		const binding = el.getAttribute("bind");
-
-		// This create a text node to replace our <clean-bind>. If there's a default value, use it.
-		const replacedTextNode = document.createTextNode(el.textContent);
-		el.replaceWith(replacedTextNode);
-
-		acc[binding] = buildBindingPoint(acc[binding], replacedTextNode, "text", el.textContent);
-
-		return acc;
-	}, {});
-};
-
-const watchedAttrsGenerator = (target: HTMLElement, boolean: boolean): DataBindings => {
-	const selector = `[data-bind-${boolean ? "boolean-" : ""}attr]`;
-	const datasetKey = boolean ? "bindBooleanAttr" : "bindAttr";
-
-	// get each child with an attr binding
-	return [...target.shadowRoot.querySelectorAll(selector)].reduce((acc: DataBindings, el: HTMLElement) => {
-		// In the attr all values are space seperated
-		el.dataset[datasetKey]
-			.split(" ")
-			.forEach(binding => (acc[binding] = buildBindingPoint(acc[binding], el, "attr")));
-
-		delete el.dataset[datasetKey];
-
-		return acc;
-	}, {});
-};
-
-const watchedSlotsGenerator = (target: HTMLElement): DataBindings => {
-	return [...target.shadowRoot.querySelectorAll("slot[data-bind]")].reduce(
-		(acc: DataBindings, slot: HTMLSlotElement) => {
-			// 	need to figure out slots with multiple children
-			const [binding, value, nodes] = [slot.dataset.bind, slot.innerHTML, slot.assignedNodes() as HTMLElement[]];
-			delete slot.dataset.bind;
-
-			acc[binding] = buildBindingPoint(acc[binding], nodes, "slot", value);
-
-			// Update the value of binding if slot changes (needed for default value passed in markup)
-			slot.addEventListener(
-				"slotchange",
-				() =>
-					(acc[binding].value = slot
-						.assignedNodes()
-						.reduce((acc, curr: HTMLElement) => (acc += curr.innerHTML), ""))
-			);
-
-			return acc;
-		},
-		{}
-	);
-};
-
-// All binding stuff is very experimental.
 const stateMachine = target => {
-	const watchedData = watchedDataGenerator(target);
+	const state = {};
 
-	// Bound slots
-	const watchedSlots = watchedSlotsGenerator(target);
+	for (const key of target.constructor.stateKeys) {
+		state[key] = {
+			textBindings: [],
+			attrBindings: [],
+			booleanAttrBindings: [],
+			slotBindings: [],
+			value: null,
+		};
+	}
 
-	// Bound attributes
-	const watchedDataAttrs = watchedAttrsGenerator(target, false);
-	const watchedBooleanAttrs = watchedAttrsGenerator(target, true);
+	for (const bindPoint of (target as HTMLElement).shadowRoot.querySelectorAll("clean-bind")) {
+		const key = bindPoint.getAttribute("bind");
+		const replacedTextNode = document.createTextNode(bindPoint.textContent);
+
+		if (bindPoint.textContent) state[key].value = bindPoint.textContent;
+		bindPoint.replaceWith(replacedTextNode);
+		state[key].textBindings.push(replacedTextNode);
+	}
+
+	for (const bindPoint of target.shadowRoot.querySelectorAll("slot[data-bind]") as HTMLSlotElement[]) {
+		const key = bindPoint.dataset.bind;
+		delete bindPoint.dataset.bind;
+
+		state[key].value = bindPoint.assignedNodes();
+		state[key].slotBindings.push(bindPoint);
+
+		bindPoint.addEventListener("slotchange", () => {
+			state[key].value = bindPoint.assignedNodes();
+		});
+	}
+
+	for (const bindPoint of (target as HTMLElement).shadowRoot.querySelectorAll("[data-bind-attr]")) {
+		(bindPoint as HTMLElement).dataset.bindAttr.split(" ").forEach(key => {
+			state[key].attrBindings.push(bindPoint);
+		});
+
+		delete (bindPoint as HTMLElement).dataset.bindAttr;
+	}
+
+	for (const bindPoint of (target as HTMLElement).shadowRoot.querySelectorAll("[data-bind-boolean-attr]")) {
+		(bindPoint as HTMLElement).dataset.bindBooleanAttr.split(" ").forEach(key => {
+			state[key].booleanAttrBindings.push(bindPoint);
+		});
+
+		delete (bindPoint as HTMLElement).dataset.bindBooleanAttr;
+	}
 
 	const proxy = new Proxy(target, {
-		set: function (_, prop, newVal) {
-			// default value for prop
-			watchedData[prop] ??= { bindings: [], value: newVal };
-			watchedSlots[prop] ??= { bindings: [], value: newVal };
+		set(_, prop: string, newVal) {
+			state[prop].value = newVal;
 
-			// set text bindings
-			watchedData[prop].bindings.forEach(({ node }) => (node.textContent = newVal));
-			watchedData[prop].value = newVal;
-
-			// 	set slot text bindings
-			watchedSlots[prop].bindings.forEach(({ nodes }) => {
-				const [firstNode, ...otherNodes] = nodes;
-				firstNode.innerHTML = newVal;
-				otherNodes.forEach(n => n.remove());
+			state[prop].textBindings.forEach((bindPoint: Text) => (bindPoint.textContent = newVal));
+			state[prop].slotBindings.forEach((bindpoint: HTMLSlotElement) => {
+				bindpoint.innerHTML = newVal;
+				bindpoint.assignedNodes().forEach((el: HTMLElement) => el.remove());
+			});
+			state[prop].attrBindings.forEach((bindPoint: HTMLElement) => bindPoint.setAttribute(prop, newVal));
+			state[prop].booleanAttrBindings.forEach((bindPoint: HTMLElement) => {
+				if (newVal) bindPoint.setAttribute(prop, "");
+				else bindPoint.removeAttribute(prop);
 			});
 
-			// set attribute bindings
-			// standard
-			watchedDataAttrs[prop]?.bindings.forEach(({ node }) =>
-				(node as HTMLElement).setAttribute(prop as string, newVal)
-			);
-			// boolean
-			watchedBooleanAttrs[prop]?.bindings.forEach(({ node }) => {
-				if (newVal) (node as HTMLElement).setAttribute(prop as string, "");
-				else (node as HTMLElement).removeAttribute(prop as string);
-			});
-
+			const transformedProp = propTransform(prop);
 			target.reflecting = true;
-			const transformedProp = propTransform(prop as string);
-			if (target.constructor.reflect?.includes(transformedProp)) {
-				target.setAttribute(transformedProp, newVal);
-			}
+			if (target.constructor.reflect?.includes(transformedProp)) target.setAttribute(prop, newVal);
 
 			if (target.constructor.booleanReflect?.includes(transformedProp)) {
 				if (newVal) target.setAttribute(transformedProp, "");
@@ -160,21 +97,15 @@ const stateMachine = target => {
 			}
 			target.reflecting = false;
 
-			return !!watchedData[prop];
+			return !!state[prop];
 		},
-		get: function (_, prop) {
-			return watchedData[prop]?.value ?? watchedSlots[prop]?.value ?? target.getAttribute(prop);
+		get(_, prop) {
+			return state[prop].value;
 		},
-		ownKeys: function () {
-			return Object.keys(watchedData);
+		ownKeys() {
+			return Reflect.ownKeys(state);
 		},
 	});
-
-	for (const prop in watchedData) {
-		// This makes sure that we're triggering our setters.
-		// eslint-disable-next-line no-self-assign
-		proxy[prop] = proxy[prop];
-	}
 
 	return proxy;
 };

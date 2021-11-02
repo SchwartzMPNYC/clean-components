@@ -7,37 +7,17 @@ import styles from "./ExpandoCard.styles.scss";
 	markup,
 	styles,
 	observedAttributes: ["open"],
+	stateKeys: ["open", "content", "summary"],
 })
 export default class ExpandoCard extends BaseCustomEl {
 	private static booleanReflect = ["open"];
 	private _detailsEl: HTMLDetailsElement = this.shadow.querySelector("details");
-	private _contentEl: HTMLDivElement = this._detailsEl.querySelector(".details-content");
 
-	public get summary() {
-		return this.state.summary;
-	}
-	public set summary(newSummary) {
-		this.state.summary = newSummary;
-	}
-
-	public get open() {
-		return this.state.open;
-	}
-	public set open(newOpen) {
-		this.state.open = Boolean(newOpen);
-	}
-
-	public get content() {
-		return this._contentEl;
-	}
-
-	constructor() {
-		super();
-		this.open = this.hasAttribute("open");
-	}
+	public contentEl: HTMLDivElement = this._detailsEl.querySelector(".details-content");
+	public summary: string;
+	public open = this.hasAttribute("open");
 
 	connectedCallback() {
-		super.connectedCallback();
 		this._detailsEl.addEventListener("toggle", () => (this.open = this._detailsEl.open));
 	}
 }

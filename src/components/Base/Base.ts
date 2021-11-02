@@ -31,18 +31,30 @@ export default class BaseCustomEl extends HTMLElement {
 			this.shadow.adoptedStyleSheets = [this.baseProperties.constructedSheet];
 
 		this.state = stateMachine(this);
+		this._initState();
 	}
 
 	get baseProperties(): BaseProps {
 		return this.constructor as unknown as BaseProps;
 	}
 
-	connectedCallback() {
-		this._initState();
-	}
-
 	protected _initState() {
-		Object.entries(this.state).forEach(([key, value]) => (this.state[key] = value ?? this[key]));
+		const prototype = Reflect.getPrototypeOf(this);
+
+		for (const key of Reflect.ownKeys(this.state)) {
+			const { get, set } = Reflect.getOwnPropertyDescriptor(prototype, key) ?? {};
+
+			if (!get && !set) {
+				Reflect.defineProperty(prototype, key, {
+					get() {
+						return this.state[key];
+					},
+					set(newVal) {
+						this.state[key] = newVal;
+					},
+				});
+			}
+		}
 	}
 
 	// By splitting these out, if a consumer needs to overwrite the attributeChangedCallback because

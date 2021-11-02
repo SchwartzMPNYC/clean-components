@@ -4,10 +4,12 @@ import styles from "./Tabs.styles.scss";
 import Tab, { TabChild, TabselectedstatechangeEventDetails } from "./Tab.component";
 
 const observedAttributes = ["selected-index", "manual-activation"];
+const stateKeys = ["selectedIndex", "manualActivation"];
 
 @define("clean-tabs", {
 	styles,
 	observedAttributes,
+	stateKeys,
 })
 export default class Tabs extends BaseCustomEl {
 	private static reflect = ["selected-index"];
@@ -16,15 +18,9 @@ export default class Tabs extends BaseCustomEl {
 	private tabs: TabChild[];
 	private focusIndex = 0;
 
+	public manualActivation = false;
 	private get automaticActivation(): boolean {
 		return !this.manualActivation;
-	}
-	
-	get manualActivation(): boolean {
-		return this.state.manualActivation ?? false;
-	}
-	set manualActivation(newManualActivation: boolean) {
-		this.state.manualActivation = newManualActivation;
 	}
 
 	get selectedIndex(): number {
@@ -74,8 +70,6 @@ export default class Tabs extends BaseCustomEl {
 
 		// The keyboard interactions actually take place on this element rather than the tabs
 		this.addEventListener("keydown", this.handleKeypress);
-
-		super._initState();
 	}
 
 	private handleKeypress({ key }: KeyboardEvent): void {

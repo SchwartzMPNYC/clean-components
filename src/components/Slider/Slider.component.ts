@@ -7,6 +7,7 @@ import styles from "./Slider.styles.scss";
 	markup,
 	styles,
 	observedAttributes: ["value", "min", "max", "step", "label"],
+	stateKeys: ["value", "min", "max", "step", "label"],
 })
 export default class CleanSlider extends BaseCustomEl {
 	private rangeInput: HTMLInputElement = this.shadow.querySelector('[type="range"]');
@@ -15,14 +16,7 @@ export default class CleanSlider extends BaseCustomEl {
 	// this makes it sprout min, max, step even if the attrs aren't set explicitly
 	private static reflect = ["min", "max", "step"];
 
-	// THIS was binding I think???  Must revert these changes and check
-	// private name: string;
-	public get label(): string {
-		return this.state.label;
-	}
-	public set label(newLabel: string) {
-		this.state.label = newLabel;
-	}
+	public label: string;
 
 	public get value(): number {
 		return this.state.value;
@@ -81,8 +75,6 @@ export default class CleanSlider extends BaseCustomEl {
 	connectedCallback() {
 		this.rangeInput.addEventListener("input", this._handleInput);
 		this.numberInput.addEventListener("input", this._handleInput);
-
-		super._initState();
 	}
 
 	disconnectedCallback() {
