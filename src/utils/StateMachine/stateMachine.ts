@@ -1,119 +1,124 @@
 // TODO: move into own entity
-const frameWorkPipes = {
-	toUpperCase: (string: string) => string.toUpperCase(),
-	toSentenceCase: (string: string) => string[0].toUpperCase() + string.slice(1),
-	reverse: (string: string) => [...string].reverse().join(""),
-	spongeBobMocking: (string: string) =>
-		[...string].reduce(
-			(acc, curr, index) =>
-				(acc += index % 2 === 1 ? curr.toUpperCase() : curr.toLowerCase()),
-			""
-		)
+// const frameWorkPipes = {
+// 	toUpperCase: (string: string) => string.toUpperCase(),
+// 	toSentenceCase: (string: string) => string[0].toUpperCase() + string.slice(1),
+// 	reverse: (string: string) => [...string].reverse().join(""),
+// 	spongeBobMocking: (string: string) =>
+// 		[...string].reduce(
+// 			(acc, curr, index) => (acc += index % 2 === 1 ? curr.toUpperCase() : curr.toLowerCase()),
+// 			""
+// 		),
+// };
+
+// const pipeGenerator = (el: HTMLElement) =>
+// 	el
+// 		.getAttribute("pipes")
+// 		?.split("|")
+// 		.reduceRight(
+// 			(composed: (any) => any , curr: string) =>
+// 				(...args) => composed(frameWorkPipes[curr](...args)),
+// 			(...args) => args
+// 		);
+
+const propTransform = (prop: string) => prop.replaceAll(/[A-Z]/g, match => "-" + match.toLowerCase());
+
+export type BindNode<T> = T extends HTMLElement ? HTMLElement : Text;
+export type BindingTypes = "text" | "attr" | "slot";
+
+export interface BindingPoint {
+	node?: BindNode<HTMLElement | Text>;
+	nodes?: HTMLElement[];
+}
+
+export interface DataBinding {
+	bindings: BindingPoint[];
+	type?: BindingTypes;
+	value?: string;
+}
+
+export interface DataBindings {
+	[key: string | symbol]: DataBinding;
+}
+
+function buildBindingPoint(binding: DataBinding, node: HTMLElement | Text, type: BindingTypes, value?): DataBinding;
+function buildBindingPoint(binding: DataBinding, node: HTMLElement[], type: BindingTypes, value?): DataBinding;
+function buildBindingPoint(
+	binding: DataBinding,
+	node: HTMLElement | Text | HTMLElement[],
+	type: BindingTypes,
+	value?
+): DataBinding {
+	return Array.isArray(node)
+		? { bindings: [...(binding?.bindings ?? []), { nodes: node }], type, value }
+		: { bindings: [...(binding?.bindings ?? []), { node }], type, value };
+}
+
+const watchedDataGenerator = (target: HTMLElement): DataBindings => {
+	return [...target.shadowRoot.querySelectorAll("clean-bind")].reduce((acc: DataBindings, el: HTMLElement) => {
+		// Get the value we're supposed to be binding to.
+		const binding = el.getAttribute("bind");
+
+		// This create a text node to replace our <clean-bind>. If there's a default value, use it.
+		const replacedTextNode = document.createTextNode(el.textContent);
+		el.replaceWith(replacedTextNode);
+
+		acc[binding] = buildBindingPoint(acc[binding], replacedTextNode, "text", el.textContent);
+
+		return acc;
+	}, {});
 };
 
-const propTransform = (prop: string) => 
-	prop.replaceAll(/[A-Z]/g, match => '-' + match.toLowerCase());
+const watchedAttrsGenerator = (target: HTMLElement, boolean: boolean): DataBindings => {
+	const selector = `[data-bind-${boolean ? "boolean-" : ""}attr]`;
+	const datasetKey = boolean ? "bindBooleanAttr" : "bindAttr";
 
-// All binding stuff is very experimental.
-const stateMachine = (target) => {
-	const pipeGenerator = (el) =>
-		el
-			.getAttribute("pipes")
-			?.split("|")
-			.reduceRight(
-				(composed, curr) => (...args) => composed(frameWorkPipes[curr](...args)),
-				(...args) => args
+	// get each child with an attr binding
+	return [...target.shadowRoot.querySelectorAll(selector)].reduce((acc: DataBindings, el: HTMLElement) => {
+		// In the attr all values are space seperated
+		el.dataset[datasetKey]
+			.split(" ")
+			.forEach(binding => (acc[binding] = buildBindingPoint(acc[binding], el, "attr")));
+
+		delete el.dataset[datasetKey];
+
+		return acc;
+	}, {});
+};
+
+const watchedSlotsGenerator = (target: HTMLElement): DataBindings => {
+	return [...target.shadowRoot.querySelectorAll("slot[data-bind]")].reduce(
+		(acc: DataBindings, slot: HTMLSlotElement) => {
+			// 	need to figure out slots with multiple children
+			const [binding, value, nodes] = [slot.dataset.bind, slot.innerHTML, slot.assignedNodes() as HTMLElement[]];
+			delete slot.dataset.bind;
+
+			acc[binding] = buildBindingPoint(acc[binding], nodes, "slot", value);
+
+			// Update the value of binding if slot changes (needed for default value passed in markup)
+			slot.addEventListener(
+				"slotchange",
+				() =>
+					(acc[binding].value = slot
+						.assignedNodes()
+						.reduce((acc, curr: HTMLElement) => (acc += curr.innerHTML), ""))
 			);
 
-	// Bound text nodes & state management
-	const watchedData = [...target.shadow.querySelectorAll("clean-bind")].reduce(
-		(acc, el) => {
-			const binding = el.getAttribute("bind");
-
-			const node = document.createTextNode(el.textContent);
-			el.replaceWith(node);
-
-			acc[binding] = {
-				bindings: [
-					...(acc[binding]?.bindings ?? []),
-					{ node, pipes: pipeGenerator(el) }
-				],
-				type: "text",
-				value: null
-			};
 			return acc;
 		},
 		{}
 	);
+};
+
+// All binding stuff is very experimental.
+const stateMachine = target => {
+	const watchedData = watchedDataGenerator(target);
 
 	// Bound slots
-	const watchedSlots = [
-		...target.shadow.querySelectorAll("slot[data-bind]")
-	].reduce((acc, slot) => {
-		// 			need to figure out slots with multiple children
-		const [binding, value, nodes] = [
-			slot.dataset.bind,
-			slot.textContent,
-			slot.assignedNodes()
-		];
-		delete slot.dataset.bind;
-
-		acc[binding] = {
-			bindings: [
-				...(acc[binding]?.bindings ?? []),
-				{ nodes, pipes: pipeGenerator(slot) }
-			],
-			type: "slot",
-			value
-		};
-
-		// Update the value of binding if slot changes (needed for default value passed in markup)
-		slot.addEventListener(
-			"slotchange",
-			() =>
-				(acc[binding].value = slot
-					.assignedNodes()
-					.reduce((acc, curr) => (acc += curr.textContent), ""))
-		);
-
-		return acc;
-	}, {});
+	const watchedSlots = watchedSlotsGenerator(target);
 
 	// Bound attributes
-	const watchedDataAttrs = [
-		// get all ELs with the bind target
-		...target.shadow.querySelectorAll("[data-bind-attr]")
-	].reduce((acc, el) => {
-		// attributes to bind are space seperated, process each one individually
-		el.dataset.bindAttr.split(" ").forEach(
-			(bindAttr) =>
-				(acc[bindAttr] = {
-					bindings: [...(acc[bindAttr]?.bindings ?? []), el],
-					type: "attr"
-				})
-		);
-
-		delete el.dataset.bindAttr;
-
-		return acc;
-	}, {});
-	const watchedBooleanAttrs = [
-		// get all ELs with the bind target
-		...target.shadow.querySelectorAll("[data-bind-boolean-attr]")
-	].reduce((acc, el) => {
-		// attributes to bind are space seperated, process each one individually
-		el.dataset.bindBooleanAttr.split(" ").forEach(
-			(bindAttr) =>
-				(acc[bindAttr] = {
-					bindings: [...(acc[bindAttr]?.bindings ?? []), el],
-					type: "attr"
-				})
-		);
-
-		delete el.dataset.bindBooleanAttr;
-
-		return acc;
-	}, {});
+	const watchedDataAttrs = watchedAttrsGenerator(target, false);
+	const watchedBooleanAttrs = watchedAttrsGenerator(target, true);
 
 	const proxy = new Proxy(target, {
 		set: function (_, prop, newVal) {
@@ -122,28 +127,25 @@ const stateMachine = (target) => {
 			watchedSlots[prop] ??= { bindings: [], value: newVal };
 
 			// set text bindings
-			watchedData[prop].bindings.forEach(
-				({ node, pipes }) => (node.textContent = pipes?.(newVal) ?? newVal)
-			);
+			watchedData[prop].bindings.forEach(({ node }) => (node.textContent = newVal));
 			watchedData[prop].value = newVal;
 
 			// 	set slot text bindings
-			watchedSlots[prop].bindings.forEach(({ nodes, pipes }) => {
-				// node.textContent = pipes?.(newVal) ?? newVal;
+			watchedSlots[prop].bindings.forEach(({ nodes }) => {
 				const [firstNode, ...otherNodes] = nodes;
-				firstNode.textContent = newVal;
-				otherNodes.forEach((n) => n.remove());
+				firstNode.innerHTML = newVal;
+				otherNodes.forEach(n => n.remove());
 			});
 
 			// set attribute bindings
 			// standard
-			watchedDataAttrs[prop]?.bindings.forEach((node) =>
-				node.setAttribute(prop, newVal)
+			watchedDataAttrs[prop]?.bindings.forEach(({ node }) =>
+				(node as HTMLElement).setAttribute(prop as string, newVal)
 			);
 			// boolean
-			watchedBooleanAttrs[prop]?.bindings.forEach((node) => {
-				if (newVal) node.setAttribute(prop, "");
-				else node.removeAttribute(prop);
+			watchedBooleanAttrs[prop]?.bindings.forEach(({ node }) => {
+				if (newVal) (node as HTMLElement).setAttribute(prop as string, "");
+				else (node as HTMLElement).removeAttribute(prop as string);
 			});
 
 			target.reflecting = true;
@@ -161,18 +163,16 @@ const stateMachine = (target) => {
 			return !!watchedData[prop];
 		},
 		get: function (_, prop) {
-			return (
-				watchedData[prop]?.value ??
-				watchedSlots[prop]?.value ??
-				target.getAttribute(prop)
-			);
+			return watchedData[prop]?.value ?? watchedSlots[prop]?.value ?? target.getAttribute(prop);
 		},
 		ownKeys: function () {
 			return Object.keys(watchedData);
-		}
+		},
 	});
 
 	for (const prop in watchedData) {
+		// This makes sure that we're triggering our setters.
+		// eslint-disable-next-line no-self-assign
 		proxy[prop] = proxy[prop];
 	}
 
