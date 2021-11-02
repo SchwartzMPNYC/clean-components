@@ -22,14 +22,22 @@ body {
 	font-weight: 250;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-::part(page-heading) {
+%headings {
 	font-family: "Josefin Sans", sans-serif;
+}
+
+$heading-size: 1em;
+@for $heading-level from 6 through 1 {
+	$heading-size: $heading-size + (6 - $heading-level) * 0.1;
+	h#{$heading-level} {
+		@extend %headings;
+		font-size: $heading-size;
+	}
+}
+
+// I know this is breaking a rule, but I'm feeling confident
+::part(page-heading) {
+	@extend h1;
 }
 
 code {
