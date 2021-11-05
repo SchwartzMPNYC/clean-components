@@ -20,12 +20,16 @@
 // 			(...args) => args
 // 		);
 
+import type BaseCustomEl from "../../components/Base/Base";
+
 const propTransform = (prop: string) => prop.replaceAll(/[A-Z]/g, match => "-" + match.toLowerCase());
 
-const stateMachine = target => {
+const stateMachine = (target: BaseCustomEl) => {
 	const state = {};
 
-	for (const key of target.constructor.stateKeys) {
+	const {stateKeys} = target.baseProperties;
+
+	for (const key of stateKeys) {
 		state[key] = {
 			textBindings: [],
 			attrBindings: [],
@@ -35,7 +39,7 @@ const stateMachine = target => {
 		};
 	}
 
-	for (const bindPoint of (target as HTMLElement).shadowRoot.querySelectorAll("clean-bind")) {
+	for (const bindPoint of target.shadowRoot.querySelectorAll("clean-bind")) {
 		const key = bindPoint.getAttribute("bind");
 		const replacedTextNode = document.createTextNode(bindPoint.textContent);
 
@@ -44,7 +48,7 @@ const stateMachine = target => {
 		state[key].textBindings.push(replacedTextNode);
 	}
 
-	for (const bindPoint of target.shadowRoot.querySelectorAll("slot[data-bind]") as HTMLSlotElement[]) {
+	for (const bindPoint of target.shadowRoot.querySelectorAll<HTMLSlotElement>("slot[data-bind]")) {
 		const key = bindPoint.dataset.bind;
 		delete bindPoint.dataset.bind;
 
@@ -56,7 +60,7 @@ const stateMachine = target => {
 		});
 	}
 
-	for (const bindPoint of (target as HTMLElement).shadowRoot.querySelectorAll("[data-bind-attr]")) {
+	for (const bindPoint of target.shadowRoot.querySelectorAll("[data-bind-attr]")) {
 		(bindPoint as HTMLElement).dataset.bindAttr.split(" ").forEach(key => {
 			state[key].attrBindings.push(bindPoint);
 		});
@@ -64,7 +68,7 @@ const stateMachine = target => {
 		delete (bindPoint as HTMLElement).dataset.bindAttr;
 	}
 
-	for (const bindPoint of (target as HTMLElement).shadowRoot.querySelectorAll("[data-bind-boolean-attr]")) {
+	for (const bindPoint of target.shadowRoot.querySelectorAll("[data-bind-boolean-attr]")) {
 		(bindPoint as HTMLElement).dataset.bindBooleanAttr.split(" ").forEach(key => {
 			state[key].booleanAttrBindings.push(bindPoint);
 		});
@@ -89,9 +93,9 @@ const stateMachine = target => {
 
 			const transformedProp = propTransform(prop);
 			target.reflecting = true;
-			if (target.constructor.reflect?.includes(transformedProp)) target.setAttribute(prop, newVal);
+			if (target.baseProperties.reflect?.includes(transformedProp)) target.setAttribute(prop, newVal);
 
-			if (target.constructor.booleanReflect?.includes(transformedProp)) {
+			if (target.baseProperties.booleanReflect?.includes(transformedProp)) {
 				if (newVal) target.setAttribute(transformedProp, "");
 				else target.removeAttribute(transformedProp);
 			}

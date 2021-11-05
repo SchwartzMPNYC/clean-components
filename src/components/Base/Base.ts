@@ -6,6 +6,7 @@ export interface BaseProps {
 	observedAttributes?: string[];
 	template: Node;
 	constructedSheet: CSSStyleSheet;
+	stateKeys: string[];
 }
 
 export interface FullShadowRoot extends ShadowRoot {
@@ -18,9 +19,12 @@ const attrTransform = (attr: string): string => attr.replaceAll(/-([a-z])/g, mat
 
 export default class BaseCustomEl extends HTMLElement {
 	// TODO: figure out this morass of typing
-	protected state;
+	protected state: {
+		[index: string]: any;
+	};
 	protected shadow: FullShadowRoot;
-	protected reflecting = false;
+
+	public reflecting = false;
 
 	constructor() {
 		super();
