@@ -11,6 +11,8 @@
 :root {
 	--dark: #181e2c;
 	--light: #f7f7f7;
+
+	font-size: var(--root-font-size, 1.05em);
 }
 
 body {
