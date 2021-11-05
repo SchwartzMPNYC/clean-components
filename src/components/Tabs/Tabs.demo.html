@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Tabs</title>
 		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
-		<link rel="stylesheet" href="../../../playground/playground.scss">
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
 	</head>
 	<body>
 		<playground-wrapper component-name="Tabs">
@@ -109,11 +109,14 @@
 					<script>
 						const tabs = document.querySelector("clean-tabs#externally-setting");
 						const tabChanger = document.querySelector("#external-tab-set");
-						tabChanger.addEventListener("change", ({ target }) => {
-							tabs.selectedIndex = target.value;
+						tabChanger.addEventListener("change", ({ target: { value: indexOfSelectedTab } }) => {
+							tabs.selectedIndex = indexOfSelectedTab;
 						});
 
-						tabs.addEventListener("tabselection", ({ detail }) => (tabChanger.value = detail.tabIndex));
+						tabs.addEventListener(
+							"tabselection",
+							({ detail: { tabIndex: indexOfSelectedTab } }) => (tabChanger.value = indexOfSelectedTab)
+						);
 					</script>
 				</div>
 			</figure>

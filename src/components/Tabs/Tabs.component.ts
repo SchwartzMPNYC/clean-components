@@ -33,7 +33,7 @@ export default class Tabs extends BaseCustomEl {
 			if (newIndex !== null) {
 				Tab.setTabState(this.selectedTab, true);
 			}
-			this.dispatchTabChange(this.selectedTab, this.state.selectedIndex);
+			this.dispatch("tabselection", { tab: this.selectedTab, tabIndex: this.state.selectedIndex });
 		}
 	}
 
@@ -98,9 +98,5 @@ export default class Tabs extends BaseCustomEl {
 
 	private unsetSelectedTabs(): void {
 		this.querySelectorAll('[aria-selected="true"]').forEach((tab: TabChild) => Tab.setTabState(tab, false));
-	}
-
-	private dispatchTabChange(tab: TabChild, tabIndex: number): void {
-		this.dispatchEvent(new CustomEvent("tabselection", { detail: { tab, tabIndex } }));
 	}
 }

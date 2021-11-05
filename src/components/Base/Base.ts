@@ -42,17 +42,21 @@ export default class BaseCustomEl extends HTMLElement {
 		return this.constructor as unknown as BaseProps;
 	}
 
+	protected dispatch(eventName: string, detail: any, bubbles = false, cancelable = true, composed = false): boolean {
+		return this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles, composed, cancelable }));
+	}
+
 	protected _initState() {
 		const prototype = Reflect.getPrototypeOf(this);
 
 		for (const key of Reflect.ownKeys(this.state)) {
 			const {
 				get = function () {
-						return this.state[key];
-					},
+					return this.state[key];
+				},
 				set = function (newVal) {
-						this.state[key] = newVal;
-					},
+					this.state[key] = newVal;
+				},
 			} = Reflect.getOwnPropertyDescriptor(prototype, key) ?? {};
 
 			Reflect.defineProperty(prototype, key, { get, set });

@@ -173,12 +173,10 @@
 				<dd>The value of the slider as of the event.</dd>
 			</dl>
 
-			<p>Every slider on this page has a <code>update</code> listener attached that will log to the console.</p>
+			<p>The body on this page has a <code>update</code> listener attached that will log to the console every time a slider changes.</p>
 
 			<script>
-				document
-					.querySelectorAll("clean-slider")
-					.forEach(slider => slider.addEventListener("update", console.log));
+				document.body.addEventListener('update',console.log)
 			</script>
 		</playground-wrapper>
 	</body>

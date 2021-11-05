@@ -35,6 +35,7 @@ export default class Tab extends BaseCustomEl {
 
 	private static dispatchTabChangeEvent(tab: TabChild, isAttrRemoval?: boolean) {
 		const detail: TabselectedstatechangeEventDetails = { tab, isAttrRemoval };
+		// This is static for the non-clean tab implementation so no custom dispatch function
 		tab.dispatchEvent(new CustomEvent("tabselectedstatechange", { detail }));
 	}
 
