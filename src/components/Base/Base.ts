@@ -46,18 +46,16 @@ export default class BaseCustomEl extends HTMLElement {
 		const prototype = Reflect.getPrototypeOf(this);
 
 		for (const key of Reflect.ownKeys(this.state)) {
-			const { get, set } = Reflect.getOwnPropertyDescriptor(prototype, key) ?? {};
-
-			if (!get && !set) {
-				Reflect.defineProperty(prototype, key, {
-					get() {
+			const {
+				get = function () {
 						return this.state[key];
 					},
-					set(newVal) {
+				set = function (newVal) {
 						this.state[key] = newVal;
 					},
-				});
-			}
+			} = Reflect.getOwnPropertyDescriptor(prototype, key) ?? {};
+
+			Reflect.defineProperty(prototype, key, { get, set });
 		}
 	}
 

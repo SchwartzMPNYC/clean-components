@@ -23,9 +23,6 @@ export default class Tabs extends BaseCustomEl {
 		return !this.manualActivation;
 	}
 
-	get selectedIndex(): number {
-		return this.state.selectedIndex;
-	}
 	set selectedIndex(newIndex: number | string) {
 		const newIndexAsNumber = Number(newIndex);
 

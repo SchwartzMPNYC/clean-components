@@ -18,10 +18,7 @@ export default class CleanSlider extends BaseCustomEl {
 
 	public label: string;
 
-	public get value(): number {
-		return this.state.value;
-	}
-	public set value(newValue: number | string) {
+	public set value(newValue: number) {
 		this.state.value = Number(newValue);
 		// I really don't wanna do a type conversion if the browser will do it implicitly.
 		this.rangeInput.value = this.value as unknown as string;
@@ -29,28 +26,19 @@ export default class CleanSlider extends BaseCustomEl {
 		this.updateCssVars();
 	}
 
-	public get max(): number {
-		return this.state.max;
-	}
-	public set max(newValue: number | string) {
+	public set max(newValue: number) {
 		this.state.max = Number(newValue);
 		this.value = Math.max(this.min, Math.min(this.value, this.max));
 		this.updateCssVars();
 	}
 
-	public get min(): number {
-		return this.state.min;
-	}
-	public set min(newValue: number | string) {
+	public set min(newValue: number) {
 		this.state.min = Number(newValue);
 		this.value = Math.max(this.min, Math.min(this.value, this.max));
 		this.updateCssVars();
 	}
 
-	public get step(): number {
-		return this.state.step;
-	}
-	public set step(newValue: number | string) {
+	public set step(newValue: number) {
 		this.state.step = Number(newValue);
 		this.value = Math.max(this.min, Math.min(this.value, this.max));
 		this.updateCssVars();
