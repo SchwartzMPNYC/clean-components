@@ -24,8 +24,16 @@ import type BaseCustomEl from "../../components/Base/Base";
 
 const propTransform = (prop: string) => prop.replaceAll(/[A-Z]/g, match => "-" + match.toLowerCase());
 
-const stateMachine = (target: BaseCustomEl) => {
-	const state = {};
+interface AttrBinding {
+	point: HTMLElement | Element;
+	alias?: string;
+}
+
+interface IfBinding {
+	point: HTMLElement | Element;
+	negate: boolean;
+}
+
 
 	const {stateKeys} = target.baseProperties;
 
@@ -35,6 +43,7 @@ const stateMachine = (target: BaseCustomEl) => {
 			attrBindings: [],
 			booleanAttrBindings: [],
 			slotBindings: [],
+			ifBindings: [],
 			value: null,
 		};
 	}
@@ -61,19 +70,30 @@ const stateMachine = (target: BaseCustomEl) => {
 	}
 
 	for (const bindPoint of target.shadowRoot.querySelectorAll("[data-bind-attr]")) {
-		(bindPoint as HTMLElement).dataset.bindAttr.split(" ").forEach(key => {
-			state[key].attrBindings.push(bindPoint);
+		(bindPoint as HTMLElement).dataset.bindAttr.split(" ").forEach(bind => {
+			const [key, alias] = bind.split(":");
+			state[key].attrBindings.push({ point: bindPoint, alias });
 		});
 
 		delete (bindPoint as HTMLElement).dataset.bindAttr;
 	}
 
 	for (const bindPoint of target.shadowRoot.querySelectorAll("[data-bind-boolean-attr]")) {
-		(bindPoint as HTMLElement).dataset.bindBooleanAttr.split(" ").forEach(key => {
-			state[key].booleanAttrBindings.push(bindPoint);
+		(bindPoint as HTMLElement).dataset.bindBooleanAttr.split(" ").forEach(bind => {
+			const [key, alias] = bind.split(":");
+			state[key].booleanAttrBindings.push({ point: bindPoint, alias });
 		});
 
 		delete (bindPoint as HTMLElement).dataset.bindBooleanAttr;
+	}
+
+	for (const bindPoint of target.shadowRoot.querySelectorAll("[data-if")) {
+		const key = (bindPoint as HTMLElement).dataset.if;
+		const negate = key[0] === "!";
+
+		state[negate ? key.slice(1) : key].ifBindings.push({ point: bindPoint, negate });
+
+		delete (bindPoint as HTMLElement).dataset.if;
 	}
 
 	const proxy = new Proxy(target, {
@@ -85,10 +105,12 @@ const stateMachine = (target: BaseCustomEl) => {
 				bindpoint.innerHTML = newVal;
 				bindpoint.assignedNodes().forEach((el: HTMLElement) => el.remove());
 			});
-			state[prop].attrBindings.forEach((bindPoint: HTMLElement) => bindPoint.setAttribute(prop, newVal));
-			state[prop].booleanAttrBindings.forEach((bindPoint: HTMLElement) => {
-				if (newVal) bindPoint.setAttribute(prop, "");
-				else bindPoint.removeAttribute(prop);
+			state[prop].attrBindings.forEach(({ point, alias }: AttrBinding) =>
+				point.setAttribute(alias ?? prop, newVal)
+			);
+			state[prop].booleanAttrBindings.forEach(({ point, alias }: AttrBinding) => {
+				if (newVal) point.setAttribute(alias ?? prop, "");
+				else point.removeAttribute(alias ?? prop);
 			});
 
 			const transformedProp = propTransform(prop);
@@ -100,6 +122,15 @@ const stateMachine = (target: BaseCustomEl) => {
 				else target.removeAttribute(transformedProp);
 			}
 			target.reflecting = false;
+
+			state[prop].ifBindings.forEach(({ point, negate }) => {
+				if ((newVal && !negate) || (!newVal && negate)) {
+					// might wanna see if I can find a better way to not render than just hiding.
+					point.removeAttribute("hidden");
+				} else {
+					point.setAttribute("hidden", "");
+				}
+			});
 
 			return !!state[prop];
 		},
