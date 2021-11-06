@@ -4,14 +4,14 @@ import styles from "./Tabs.styles.scss";
 import Tab, { TabChild, TabselectedstatechangeEventDetails } from "./Tab.component";
 
 const observedAttributes = ["selected-index", "manual-activation"];
-const stateKeys = ["selectedIndex", "manualActivation"];
+const stateKeys = ["selectedIndex", "manualActivation"] as const;
 
 @define("clean-tabs", {
 	styles,
 	observedAttributes,
 	stateKeys,
 })
-export default class Tabs extends BaseCustomEl {
+export default class Tabs extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	private static reflect = ["selected-index"];
 	private static booleanReflect = ["manual-activation"];
 

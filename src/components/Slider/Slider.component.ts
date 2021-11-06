@@ -3,13 +3,15 @@ import BaseCustomEl from "../Base/Base";
 import markup from "./Slider.template.html";
 import styles from "./Slider.styles.scss";
 
+const stateKeys = ["value", "min", "max", "step", "label"] as const;
+
 @define("clean-slider", {
 	markup,
 	styles,
 	observedAttributes: ["value", "min", "max", "step", "label"],
-	stateKeys: ["value", "min", "max", "step", "label"],
+	stateKeys,
 })
-export default class CleanSlider extends BaseCustomEl {
+export default class CleanSlider extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	private rangeInput: HTMLInputElement = this.shadow.querySelector('[type="range"]');
 	private numberInput: HTMLInputElement = this.shadow.querySelector('[type="number"]');
 

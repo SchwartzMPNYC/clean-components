@@ -3,7 +3,7 @@ import BaseCustomEl from "../Base/Base";
 import styles from "./Tab.styles.scss";
 
 const observedAttributes = ["selected"];
-const stateKeys = ["selected"];
+const stateKeys = ["selected"] as const;
 
 export type TabChild = HTMLElement | Tab;
 export type TabselectedstatechangeEventDetails = {
@@ -16,7 +16,7 @@ export type TabselectedstatechangeEventDetails = {
 	observedAttributes,
 	stateKeys,
 })
-export default class Tab extends BaseCustomEl {
+export default class Tab extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	private static booleanReflect = ["selected"];
 	public selected: boolean = this.hasAttribute("selected");
 

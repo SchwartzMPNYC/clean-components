@@ -3,13 +3,15 @@ import BaseCustomEl from "../Base/Base";
 import markup from "./ExpandoCard.template.html";
 import styles from "./ExpandoCard.styles.scss";
 
+const stateKeys = ["open", "content", "summary"] as const;
+
 @define("clean-expando-card", {
 	markup,
 	styles,
 	observedAttributes: ["open"],
-	stateKeys: ["open", "content", "summary"],
+	stateKeys,
 })
-export default class ExpandoCard extends BaseCustomEl {
+export default class ExpandoCard extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	private static booleanReflect = ["open"];
 	private _detailsEl: HTMLDetailsElement = this.shadow.querySelector("details");
 
