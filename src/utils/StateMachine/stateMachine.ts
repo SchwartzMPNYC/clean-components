@@ -34,10 +34,21 @@ interface IfBinding {
 	negate: boolean;
 }
 
+export interface StateKey {
+	textBindings: Text[];
+	attrBindings: AttrBinding[];
+	booleanAttrBindings: AttrBinding[];
+	slotBindings: Node[];
+	ifBindings: IfBinding[];
+	value: any;
+}
 
-	const {stateKeys} = target.baseProperties;
+const stateMachine = <StateKeys>(target: BaseCustomEl<{}>) => {
+	const state: { [key: string | symbol]: StateKey } = {};
 
-	for (const key of stateKeys) {
+	const { stateKeys } = target.baseProperties;
+
+	for (const key of stateKeys as unknown as string[]) {
 		state[key] = {
 			textBindings: [],
 			attrBindings: [],
@@ -142,7 +153,7 @@ interface IfBinding {
 		},
 	});
 
-	return proxy;
+	return proxy as unknown as StateKeys;
 };
 
 export default stateMachine;

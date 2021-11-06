@@ -4,7 +4,7 @@ interface definitionMetaData {
 	markup?: string;
 	styles?: string;
 	observedAttributes?: string[];
-	stateKeys?: string[];
+	stateKeys?:{ [index: number]: string };
 }
 
 export const define =

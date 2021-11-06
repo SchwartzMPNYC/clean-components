@@ -1,12 +1,12 @@
 import stateMachine from "../../utils/StateMachine/stateMachine";
 
-export interface BaseProps {
+export interface BaseProps<StateKeysLiteral> {
 	reflect?: string[];
 	booleanReflect?: string[];
 	observedAttributes?: string[];
 	template: Node;
 	constructedSheet: CSSStyleSheet;
-	stateKeys: string[];
+	stateKeys: StateKeysLiteral;
 }
 
 export interface FullShadowRoot extends ShadowRoot {
@@ -17,11 +17,8 @@ export interface FullShadowRoot extends ShadowRoot {
 // TODO: This should probably go with propsTransformer
 const attrTransform = (attr: string): string => attr.replaceAll(/-([a-z])/g, match => match[1].toUpperCase());
 
-export default class BaseCustomEl extends HTMLElement {
-	// TODO: figure out this morass of typing
-	protected state: {
-		[index: string]: any;
-	};
+export default abstract class BaseCustomEl<StateKeys extends {}> extends HTMLElement {
+	protected state: StateKeys;
 	protected shadow: FullShadowRoot;
 
 	public reflecting = false;
@@ -34,12 +31,19 @@ export default class BaseCustomEl extends HTMLElement {
 		if (this.baseProperties.constructedSheet)
 			this.shadow.adoptedStyleSheets = [this.baseProperties.constructedSheet];
 
-		this.state = stateMachine(this);
+		this.state = stateMachine<StateKeys>(this);
 		this._initState();
 	}
 
-	get baseProperties(): BaseProps {
-		return this.constructor as unknown as BaseProps;
+	get baseProperties(): BaseProps<StateKeys> {
+		return (({ reflect, booleanReflect, observedAttributes, template, constructedSheet, stateKeys }) => ({
+			reflect,
+			booleanReflect,
+			observedAttributes,
+			template,
+			constructedSheet,
+			stateKeys,
+		}))(this.constructor as any);
 	}
 
 	protected dispatch(eventName: string, detail: any, bubbles = false, cancelable = true, composed = false): boolean {
@@ -49,7 +53,7 @@ export default class BaseCustomEl extends HTMLElement {
 	protected _initState() {
 		const prototype = Reflect.getPrototypeOf(this);
 
-		for (const key of Reflect.ownKeys(this.state)) {
+		for (const key of Reflect.ownKeys(this.state as {})) {
 			const {
 				get = function () {
 					return this.state[key];
