@@ -17,7 +17,7 @@ export interface FullShadowRoot extends ShadowRoot {
 // TODO: This should probably go with propsTransformer
 const attrTransform = (attr: string): string => attr.replaceAll(/-([a-z])/g, match => match[1].toUpperCase());
 
-export default abstract class BaseCustomEl<StateKeys extends {}> extends HTMLElement {
+export default abstract class BaseCustomEl<StateKeys extends Record<string, unknown>> extends HTMLElement {
 	protected state: StateKeys;
 	protected shadow: FullShadowRoot;
 
@@ -43,17 +43,18 @@ export default abstract class BaseCustomEl<StateKeys extends {}> extends HTMLEle
 			template,
 			constructedSheet,
 			stateKeys,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		}))(this.constructor as any);
 	}
 
-	protected dispatch(eventName: string, detail: any, bubbles = false, cancelable = true, composed = false): boolean {
+	protected dispatch(eventName: string, detail, bubbles = false, cancelable = true, composed = false): boolean {
 		return this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles, composed, cancelable }));
 	}
 
 	protected _initState() {
 		const prototype = Reflect.getPrototypeOf(this);
 
-		for (const key of Reflect.ownKeys(this.state as {})) {
+		for (const key of Reflect.ownKeys(this.state as StateKeys)) {
 			const {
 				get = function () {
 					return this.state[key];
@@ -90,7 +91,6 @@ export default abstract class BaseCustomEl<StateKeys extends {}> extends HTMLEle
 
 	attributeChangedCallback(name: string, oldVal: string, newVal: string) {
 		if (this.reflecting && oldVal === newVal) return;
-
 		const transformedAttr = attrTransform(name);
 
 		// This lets me easily run through these until I get to the first one that returns true then stops.

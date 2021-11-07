@@ -120,7 +120,7 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 	private _handleListItemSlotChange = () => {
 		const wrapperChild = this._childrenSlot.assignedElements()[0];
 		if (wrapperChild) {
-			this.listItems = [...wrapperChild?.children] as HTMLElement[];
+			this.listItems = [...(wrapperChild?.children ?? [])] as HTMLElement[];
 			wrapperChild.remove();
 		}
 	};
