@@ -10,10 +10,146 @@
 	</head>
 	<body>
 		<playground-wrapper component-name="MenuButton">
+			<h2>Basic example</h2>
+
+			<figure>
+				<figcaption>A basic slider example</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-menu-button>
+						Menu
+						<slot slot="list-items">
+							<span>A</span>
+							<span>Really</span>
+							<span>Cool</span>
+							<span>List of items</span>
+							<button onclick="alert('This function stays in place.')">I'm an actual button</button>
+							<a href="../../../playground.html">Back to home page</a>
+						</slot>
+					</clean-menu-button>
+				</div>
+			</figure>
+
+			<h2>Adding child content</h2>
+			<h3>Toggle button</h3>
+			<p>
+				The toggle button content is the default <code>slot</code> for the <code>clean-menu-button</code>, so
+				content is added to the button as you would any other button.
+			</p>
+			<h3>Menu items</h3>
+			<p>There are two ways to add menu items:</p>
+			<ol>
+				<li>
+					Using the <code>list-items</code> slot. All direct children of the element that your<code
+						>*[slot="list-items"]</code
+					>
+					will be used as list items with minimal modification.
+				</li>
+				<li>
+					Passing an array of <code>HTMLElements</code> to the <code>listItems</code> property of the menu
+					button. Again, elements will be modified just enough to make them work.
+				</li>
+			</ol>
+
+			<p>For example, here's the markup used to render the above basic example:</p>
+
+			<figure aria-label="Basic menu button markup.">
+				<div class="fig-content-wrapper">
+					<pre><code>
+&lt;clean-menu-button&gt;
+	Menu
+	&lt;slot slot=&quot;list-items&quot;&gt;
+		&lt;span&gt;A&lt;/span&gt;
+		&lt;span&gt;Really&lt;/span&gt;
+		&lt;span&gt;Cool&lt;/span&gt;
+		&lt;span&gt;List of items&lt;/span&gt;
+		&lt;button onclick=&quot;alert('This function stays in place.')&quot;&gt;
+			I'm an actual button
+		&lt;/button&gt;
+		&lt;a href=&quot;../../../playground.html&quot;&gt;Back to home page&lt;/a&gt;
+	&lt;/slot&gt;
+&lt;/clean-menu-button&gt;
+					</code></pre>
+				</div>
+			</figure>
+
+			<h2>Properties and attributes</h2>
+			<h3>Properties</h3>
+			<dl>
+				<dt><code>expanded</code></dt>
+				<dd>
+					Open state of menu. Is <code>null</code> when not truthy, in order to streamline menu button aria
+					attribues.
+				</dd>
+				<dd class="badge boolean">boolean</dd>
+				<dd class="badge reflect">reflected</dd>
+
+				<dt><code>toggleContent</code></dt>
+				<dd>The text of the toggle button. Like other slot bindings, can take strings or an array of nodes.</dd>
+				<dd class="badge slot">slot binding</dd>
+
+				<dt><code>listItems</code></dt>
+				<dd>An array of element children making up the list items.</dd>
+			</dl>
+
+			<h3>Attributes</h3>
+			<dl>
+				<dt><code>expanded</code></dt>
+				<dd>Open state of menu.</dd>
+				<dd class="badge boolean">boolean</dd>
+				<dd class="badge reflect">reflected</dd>
+			</dl>
+
+			<h2>Styling</h2>
+			<h3>Variables</h3>
+			<p>The following CSS Custom Properties are available for styling.</p>
+
+			<dl>
+				<dt><code>--menu-color</code></dt>
+				<dd>Color for text in the button/menu</dd>
+				<dd>Defaults to <code>--dark</code></dd>
+				<dt><code>--menu-bg-color</code></dt>
+				<dd>Background colors in the button/menu</dd>
+				<dd>Defaults to <code>--light</code></dd>
+				<dt><code>--menu-button__default-borders</code></dt>
+				<dd>Default for external borders of <em>both</em> button and menu</dd>
+				<dd>Defaults to <code>0.1em solid var(--menu-color)</code></dd>
+				<dt><code>--menu-button__toggle_border</code></dt>
+				<dd>Toggle button borders</dd>
+				<dd>Defaults to <code>--menu-button__default-borders</code></dd>
+				<dt><code>--menu-button__list_border</code></dt>
+				<dd>Menu external borders</dd>
+				<dd>Defaults to <code>--menu-button__default-borders</code></dd>
+				<dt><code>--menu-button__list-item_internal-border</code></dt>
+				<dd>Block border between list items.</dd>
+				<dd>Defaults to <code>0.05em solid var(--menu-color)</code></dd>
+				<dt><code>--menu-button_list-item--highlighted_color</code></dt>
+				<dd>Color for text in menu items on hover or keyboard focus</dd>
+				<dd>Defaults to <code>--menu-bg-color</code></dd>
+				<dt><code>--menu-button_list-item--highlighted_bg-color</code></dt>
+				<dd>Background color for text in menu items on hover or keyboard focus</dd>
+				<dd>Defaults to <code>--menu-color</code></dd>
+			</dl>
+
+			<h3>Parts</h3>
+			<p>The following <code>::parts</code> are exposed:</p>
+
+			<dl>
+				<dt><code>toggle</code></dt>
+				<dd>The toggle button</dd>
+				<dt><code>menu</code></dt>
+				<dd>The container for the list items</dd>
+				<dt><code>menuitem</code></dt>
+				<dd>The menu items themselves</dd>
+			</dl>
+
+			<h3>Styled example</h3>
+
 			<style>
 				clean-menu-button.custom-colors {
 					--menu-color: #27531c;
 					--menu-bg-color: #d1f7a6;
+
+					align-self: center;
 				}
 				clean-menu-button.custom-colors::part(menuitem) {
 					--menu-bg-color: #d0ffe9;
@@ -23,35 +159,85 @@
 				}
 			</style>
 
-			<clean-menu-button>
-				Menu
+			<figure>
+				<figcaption>A menu button and the custom css that has been applied to it.</figcaption>
+				<div class="fig-content-wrapper">
+					<pre style="border: 0.2em solid black; border-radius: 0.2em"><code aria-label="Styling block">
+clean-menu-button.custom-colors {
+	--menu-color: #27531c;
+	--menu-bg-color: #d1f7a6;
+}
 
-				<slot slot="list-items">
-					<span>A</span>
-					<span>Really</span>
-					<span>Cool</span>
-					<span>List of items</span>
-					<button onclick="alert('Functions placed on these elements in the markup will be kept.')">
-						I'm an actual button
-					</button>
-					<a href="../../../playground.html">Back to home page</a>
-				</slot>
-			</clean-menu-button>
+clean-menu-button.custom-colors::part(menuitem) {
+	--menu-bg-color: #d0ffe9;
+}
 
-			<clean-menu-button class="custom-colors">
-				Menu with color
+clean-menu-button.custom-colors {
+	--menu-button_list-item--highlighted_bg-color: #20473f;
+}
+						</code></pre>
 
-				<slot slot="list-items">
-					<span>A</span>
-					<span>Really</span>
-					<span>Cool</span>
-					<span>List of items</span>
-					<button onclick="alert('Functions placed on these elements in the markup will be kept.')">
-						I'm an actual button
-					</button>
-					<a href="../../../playground.html">Back to home page</a>
-				</slot>
-			</clean-menu-button>
+					<clean-menu-button class="custom-colors">
+						Menu with custom styling
+
+						<slot slot="list-items">
+							<span>A</span>
+							<span>Really</span>
+							<span>Cool</span>
+							<span>List of items</span>
+							<button onclick="alert('Functions placed on these elements in the markup will be kept.')">
+								I'm an actual button
+							</button>
+							<a href="../../../playground.html">Back to home page</a>
+						</slot>
+					</clean-menu-button>
+				</div>
+			</figure>
+
+			<h2>Events</h2>
+			<h3>Emitted events</h3>
+			<p>
+				The menu buttons emit an <code>menuitemclick</code>
+				<a href="https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events"
+					>custom event</a
+				>
+				when clicked.
+			</p>
+
+			<p>Contents of the <code>event.detail</code> property of the <code>menuitemclick</code> event.</p>
+			<dl>
+				<dt><code>buttonClicked</code></dt>
+				<dd>A reference to the menu item that was clicked.</dd>
+			</dl>
+
+			<p>
+				The body on this page has a <code>buttonClicked</code> listener attached that will log to the console
+				every time a menu item is clicked.
+			</p>
+
+			<h3>Adding functionality to the menu items</h3>
+
+			<p>There are 3 ways to handle a menu item click:</p>
+			<ol>
+				<li>
+					Use a <code>menuitemclick</code> listener on the <code>clean-menu-button</code> item and fire your
+					event based on the reference to the clicked item.
+				</li>
+				<li>
+					Add your event to menu item node in the markup with the <code>onclick</code> attribute. There are
+					examples of this on this page.
+				</li>
+				<li>
+					You can add listeners to menu items imperatively using
+					<code>document.querySelector("clean-menu-button selector-for-your-menu-item")</code>.
+				</li>
+			</ol>
+
+			<p>
+				Because menu items are taken pretty much as is, (only <code>role</code>, <code>tabindex</code>, and
+				<code>part</code> will ever be <em>changed</em> from what's passed in) you can make use of things like
+				<code>data-*</code> attributes on your menu items to keep track of them.
+			</p>
 
 			<script>
 				document.querySelectorAll("clean-menu-button").forEach(menu =>
