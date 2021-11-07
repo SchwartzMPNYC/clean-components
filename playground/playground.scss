@@ -105,6 +105,16 @@ dd {
 		--badge-color: #61c5e4;
 	}
 
+	&.boolean {
+		// TODO: systematize color
+		--badge-color: #f182f5;
+	}
+
+	&.slot {
+		// TODO: systematize color
+		--badge-color: #63f5ee;
+	}
+
 	&.reflect {
 		// TODO: systematize color
 		--badge-color: #ade24b;
