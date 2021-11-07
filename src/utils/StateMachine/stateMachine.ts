@@ -34,16 +34,21 @@ interface IfBinding {
 	negate: boolean;
 }
 
+interface SlotBinding {
+	point: HTMLSlotElement;
+	allowNext: boolean;
+}
+
 export interface StateKey {
 	textBindings: Text[];
 	attrBindings: AttrBinding[];
 	booleanAttrBindings: AttrBinding[];
-	slotBindings: Node[];
+	slotBindings: SlotBinding[];
 	ifBindings: IfBinding[];
-	value: any;
+	value: unknown;
 }
 
-const stateMachine = <StateKeys>(target: BaseCustomEl<{}>) => {
+const stateMachine = <StateKeys>(target: BaseCustomEl<Record<string, unknown>>) => {
 	const state: { [key: string | symbol]: StateKey } = {};
 
 	const { stateKeys } = target.baseProperties;
@@ -71,40 +76,43 @@ const stateMachine = <StateKeys>(target: BaseCustomEl<{}>) => {
 	for (const bindPoint of target.shadowRoot.querySelectorAll<HTMLSlotElement>("slot[data-bind]")) {
 		const key = bindPoint.dataset.bind;
 		delete bindPoint.dataset.bind;
-
 		state[key].value = bindPoint.assignedNodes();
-		state[key].slotBindings.push(bindPoint);
+
+		const point = { point: bindPoint, allowNext: true };
+		state[key].slotBindings.push(point);
 
 		bindPoint.addEventListener("slotchange", () => {
-			state[key].value = bindPoint.assignedNodes();
+			// when we update the children ourselves, it triggers the slot change event in the next tick.
+			if (point.allowNext) state[key].value = bindPoint.assignedNodes();
+			point.allowNext = true;
 		});
 	}
 
-	for (const bindPoint of target.shadowRoot.querySelectorAll("[data-bind-attr]")) {
-		(bindPoint as HTMLElement).dataset.bindAttr.split(" ").forEach(bind => {
+	for (const bindPoint of target.shadowRoot.querySelectorAll<HTMLElement>("[data-bind-attr]")) {
+		bindPoint.dataset.bindAttr.split(" ").forEach(bind => {
 			const [key, alias] = bind.split(":");
 			state[key].attrBindings.push({ point: bindPoint, alias });
 		});
 
-		delete (bindPoint as HTMLElement).dataset.bindAttr;
+		delete bindPoint.dataset.bindAttr;
 	}
 
-	for (const bindPoint of target.shadowRoot.querySelectorAll("[data-bind-boolean-attr]")) {
-		(bindPoint as HTMLElement).dataset.bindBooleanAttr.split(" ").forEach(bind => {
+	for (const bindPoint of target.shadowRoot.querySelectorAll<HTMLElement>("[data-bind-boolean-attr]")) {
+		bindPoint.dataset.bindBooleanAttr.split(" ").forEach(bind => {
 			const [key, alias] = bind.split(":");
 			state[key].booleanAttrBindings.push({ point: bindPoint, alias });
 		});
 
-		delete (bindPoint as HTMLElement).dataset.bindBooleanAttr;
+		delete bindPoint.dataset.bindBooleanAttr;
 	}
 
-	for (const bindPoint of target.shadowRoot.querySelectorAll("[data-if")) {
-		const key = (bindPoint as HTMLElement).dataset.if;
+	for (const bindPoint of target.shadowRoot.querySelectorAll<HTMLElement>("[data-if")) {
+		const key = bindPoint.dataset.if;
 		const negate = key[0] === "!";
 
 		state[negate ? key.slice(1) : key].ifBindings.push({ point: bindPoint, negate });
 
-		delete (bindPoint as HTMLElement).dataset.if;
+		delete bindPoint.dataset.if;
 	}
 
 	const proxy = new Proxy(target, {
@@ -112,10 +120,17 @@ const stateMachine = <StateKeys>(target: BaseCustomEl<{}>) => {
 			state[prop].value = newVal;
 
 			state[prop].textBindings.forEach((bindPoint: Text) => (bindPoint.textContent = newVal));
-			state[prop].slotBindings.forEach((bindpoint: HTMLSlotElement) => {
-				bindpoint.innerHTML = newVal;
-				bindpoint.assignedNodes().forEach((el: HTMLElement) => el.remove());
+			state[prop].slotBindings.forEach((slotBinding: SlotBinding) => {
+				slotBinding.point.assignedNodes().forEach((el: HTMLElement) => el.remove());
+
+				if (typeof newVal === "string") slotBinding.point.replaceChildren(newVal);
+				else if (newVal instanceof Array)
+					slotBinding.point.replaceChildren(...[...newVal].map((node: Node) => node.cloneNode(true)));
+				else slotBinding.point.replaceChildren(newVal.cloneNode());
+
+				slotBinding.allowNext = false;
 			});
+
 			state[prop].attrBindings.forEach(({ point, alias }: AttrBinding) => {
 				if (newVal !== null) point.setAttribute(alias ?? prop, newVal);
 				else point.removeAttribute(alias ?? prop);
