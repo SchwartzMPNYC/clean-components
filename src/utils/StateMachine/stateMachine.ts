@@ -116,9 +116,10 @@ const stateMachine = <StateKeys>(target: BaseCustomEl<{}>) => {
 				bindpoint.innerHTML = newVal;
 				bindpoint.assignedNodes().forEach((el: HTMLElement) => el.remove());
 			});
-			state[prop].attrBindings.forEach(({ point, alias }: AttrBinding) =>
-				point.setAttribute(alias ?? prop, newVal)
-			);
+			state[prop].attrBindings.forEach(({ point, alias }: AttrBinding) => {
+				if (newVal !== null) point.setAttribute(alias ?? prop, newVal);
+				else point.removeAttribute(alias ?? prop);
+			});
 			state[prop].booleanAttrBindings.forEach(({ point, alias }: AttrBinding) => {
 				if (newVal) point.setAttribute(alias ?? prop, "");
 				else point.removeAttribute(alias ?? prop);
