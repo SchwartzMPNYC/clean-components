@@ -6,10 +6,11 @@ const demoScaffold = (componentName) => `<!DOCTYPE html>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
 		<link rel="stylesheet" href="../../../playground/playground.scss">
+		<script src="./${componentName}.component.ts" type="module"></script>
 	</head>
 	<body>
 		<playground-wrapper component-name="${componentName}">
-			<script src="./${componentName}.component.ts" type="module"></script>
+			<clean-${componentName.toLowerCase()}></clean-${componentName.toLowerCase()}>
 		</playground-wrapper>
 	</body>
 </html>`;
