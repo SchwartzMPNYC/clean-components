@@ -9,6 +9,7 @@ const stateKeys = [
 	"listItems",
 	"_highlightedItemIndex",
 	"_highlightedItemId",
+	"openUp",
 ] as const;
 
 @define("clean-menu-button", {
@@ -18,11 +19,13 @@ const stateKeys = [
 	stateKeys,
 })
 export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private static booleanReflect = ["expanded"];
+	private static booleanReflect = ["expanded", "open-up"];
 
 	private _toggle: HTMLElement = this.shadow.querySelector("#toggle");
 	private _list: HTMLElement = this.shadow.querySelector("[role='menu']");
 	private _childrenSlot: HTMLSlotElement = this.shadow.querySelector('slot[name="list-items"]');
+
+	public openUp = false;
 
 	private set _highlightedItemIndex(newIndex: number) {
 		// remove current highlights
@@ -48,6 +51,13 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 
 		if (newState) {
 			window.addEventListener("keydown", this._handleWindowEscPress);
+
+			if (this.openUp) {
+				const { bottom, height } = this._list.getBoundingClientRect();
+				this.openUp = bottom + height - this._toggle.getBoundingClientRect().height > window.innerHeight;
+			} else {
+				this.openUp = this._list.getBoundingClientRect().bottom > window.innerHeight;
+			}
 		} else {
 			window.removeEventListener("keydown", this._handleWindowEscPress);
 			this._highlightedItemIndex = null;

@@ -13,8 +13,12 @@
 	--menu-button__list_border: var(--menu-button__default-borders);
 	--menu-button__list-item_internal-border: 0.05em solid var(--menu-color);
 
-	display: inline;
+	display: inline-block;
 	position: relative;
+}
+
+:host([open-up]) [role="menu"] {
+	inset-block-end: 100%;
 }
 
 [role="menu"] {
