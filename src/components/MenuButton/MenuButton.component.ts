@@ -6,8 +6,6 @@ import styles from "./MenuButton.styles.scss";
 const stateKeys = [
 	"toggleContent",
 	"expanded",
-	"closed",
-	"toggleContent",
 	"listItems",
 	"_highlightedItemIndex",
 	"_highlightedItemId",
