@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
+		<script src="./MenuButton.component.ts" type="module"></script>
+	</head>
+	<body>
+		<playground-wrapper component-name="MenuButton">
+			<style>
+				clean-menu-button.custom-colors {
+					--menu-color: #27531c;
+					--menu-bg-color: #d1f7a6;
+				}
+				clean-menu-button.custom-colors::part(menuitem) {
+					--menu-bg-color: #d0ffe9;
+				}
+				clean-menu-button.custom-colors {
+					--menu-button_list-item--highlighted_bg-color: #20473f;
+				}
+			</style>
+
+			<clean-menu-button>
+				Menu
+
+				<slot slot="list-items">
+					<span>A</span>
+					<span>Really</span>
+					<span>Cool</span>
+					<span>List of items</span>
+					<button onclick="alert('Functions placed on these elements in the markup will be kept.')">
+						I'm an actual button
+					</button>
+					<a href="../../../playground.html">Back to home page</a>
+				</slot>
+			</clean-menu-button>
+
+			<clean-menu-button class="custom-colors">
+				Menu with color
+
+				<slot slot="list-items">
+					<span>A</span>
+					<span>Really</span>
+					<span>Cool</span>
+					<span>List of items</span>
+					<button onclick="alert('Functions placed on these elements in the markup will be kept.')">
+						I'm an actual button
+					</button>
+					<a href="../../../playground.html">Back to home page</a>
+				</slot>
+			</clean-menu-button>
+
+			<script>
+				document.querySelectorAll("clean-menu-button").forEach(menu =>
+					menu.addEventListener("menuitemclick", ({ detail: { buttonClicked } }) => {
+						console.log(buttonClicked);
+					})
+				);
+
+				document.querySelectorAll("clean-menu-button button").forEach(menuitem => {
+					menuitem.addEventListener("click", () =>
+						alert("Events can be added to child buttons programmatically as well.")
+					);
+				});
+			</script>
+		</playground-wrapper>
+	</body>
+</html>

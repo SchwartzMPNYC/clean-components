@@ -1,0 +1,78 @@
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+
+:host {
+	--menu-color: var(--dark);
+	--menu-bg-color: var(--light);
+
+	--menu-button__default-borders: 0.1em solid var(--menu-color);
+	--menu-button__toggle_border: var(--menu-button__default-borders);
+	--menu-button__list_border: var(--menu-button__default-borders);
+	--menu-button__list-item_internal-border: 0.05em solid var(--menu-color);
+
+	display: inline;
+	position: relative;
+}
+
+[role="menu"] {
+	padding: 0;
+	margin: 0;
+	width: max-content;
+	border: var(--menu-button__list_border);
+	border-radius: 0.2em;
+	position: absolute;
+	inset-inline-start: 0;
+
+	&:focus-visible [part*="highlighted"],
+	&:not(:focus-visible) :hover {
+		// TODO: these are ridiculous variable names
+		background-color: var(--menu-button_list-item--highlighted_bg-color, var(--menu-color));
+		color: var(--menu-button_list-item--highlighted_color, var(--menu-bg-color));
+	}
+}
+
+%menu-item-and-any-buttons {
+	all: unset;
+	box-sizing: border-box;
+	appearance: none;
+	margin: 0;
+	padding: 0.2em 0.3em;
+	border: none;
+	background-color: var(--menu-bg-color);
+	color: var(--menu-color);
+}
+
+button {
+	@extend %menu-item-and-any-buttons;
+}
+
+#toggle {
+	border: var(--menu-button__toggle_border);
+	border-radius: 0.2em;
+
+	&:focus-visible {
+		// TODO: systematize color
+		outline: 2px solid orangered;
+	}
+}
+
+[role="menuitem"] {
+	@extend %menu-item-and-any-buttons;
+	display: flex;
+	width: 100%;
+	border-inline: none;
+	border-block: var(--menu-button__list-item_internal-border);
+	background-color: var(--menu-bg-color);
+	cursor: pointer;
+
+	&:first-child {
+		border-block-start: none;
+	}
+
+	&:last-child {
+		border-block-end: none;
+	}
+}
