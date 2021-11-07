@@ -1,5 +1,5 @@
 <button data-bind-attr="expanded:aria-expanded" aria-controls="list" aria-haspopup="menu" id="toggle" part="toggle">
-	<slot data-bind="toggleContent">test</slot>
+	<slot data-bind="toggleContent"></slot>
 </button>
 
 <div data-if="expanded" id="list" role="menu" aria-labelledby="toggle" data-bind-attr="_highlightedItemId:aria-activedescendant" part="menu" tabindex="-1"></div>
