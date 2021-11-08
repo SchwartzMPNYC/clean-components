@@ -10,17 +10,19 @@
 	</head>
 	<body>
 		<playground-wrapper component-name="Radio">
-			<div style="display: flex; flex-direction: column; gap: 0.5em">
+			<fieldset style="display: flex; flex-direction: column; gap: 0.5em">
+				<legend>First Radio group</legend>
 				<clean-radio name="group1">Radio 1</clean-radio>
 				<clean-radio name="group1">Radio 2</clean-radio>
 				<clean-radio name="group1" checked>Radio 3</clean-radio>
-			</div>
+			</fieldset>
 
-			<div style="display: flex; gap: 0.5em; margin-block: 1rem">
+			<fieldset style="display: flex; gap: 0.5em; margin-block: 1rem">
+				<legend>Second Radio group</legend>
 				<clean-radio name="group2">Radio 1</clean-radio>
 				<clean-radio name="group2">Radio 2</clean-radio>
 				<clean-radio name="group2">Radio 3</clean-radio>
-			</div>
+			</fieldset>
 		</playground-wrapper>
 	</body>
 </html>
