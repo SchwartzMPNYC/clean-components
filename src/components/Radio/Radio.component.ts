@@ -3,7 +3,7 @@ import BaseCustomEl from "../Base/Base";
 import markup from "./Radio.template.html";
 import styles from "./Radio.styles.scss";
 
-const stateKeys = ["checked", "disabled", "name"] as const;
+const stateKeys = ["checked", "disabled", "name", "labelContent"] as const;
 
 @define("clean-radio", {
 	markup,
