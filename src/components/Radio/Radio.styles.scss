@@ -1,0 +1,97 @@
+$radio_outer-circle-diameter: 1em;
+$radio_inner-circle-diameter: 0.35em;
+
+$radio_gap: 0.25em;
+$radio_inline-padding: 0.2rem;
+
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+
+:host {
+	--radio_label-padding-inline-start: #{$radio_outer-circle-diameter + $radio_gap};
+	--radio_outer-circle-diameter: #{$radio_outer-circle-diameter};
+	--radio_inner-circle-diameter: #{$radio_inner-circle-diameter};
+
+	// TODO: systematize colors
+	--radio_bg-color: var(--light);
+	--radio_color: #052ba8;
+	--radio_border-color: var(--radio_color);
+	--radio_selected-indicator-color: var(--radio_border-color);
+
+	display: inline-grid;
+	grid-template-columns: var(--radio_outer-circle-diameter) max-content;
+	align-items: baseline;
+
+	isolation: isolate;
+}
+
+input {
+	appearance: none;
+	margin: 0;
+	padding-inline-start: $radio_inline-padding;
+
+	grid-area: 1 / 1 / 1 / 1;
+
+	display: grid;
+	grid-template-columns: auto;
+	align-items: center;
+	justify-content: center;
+
+	cursor: pointer;
+
+	&::before,
+	&::after {
+		content: "";
+		border-radius: 50%;
+		display: block;
+		aspect-ratio: 1;
+		grid-area: 1 / 1 / 1 / 1;
+	}
+
+	&::before {
+		height: var(--radio_outer-circle-diameter);
+		// TODO: systematize color
+		background-color: var(--radio_bg-color, var(--light));
+		// TODO: systematize color
+		border: 0.1em solid var(--radio_border-color, var(--dark));
+	}
+
+	&:checked::after {
+		// TODO: systematize color
+		background-color: var(--radio_selected-indicator-color, var(--dark));
+		height: var(--radio_inner-circle-diameter);
+		margin: auto;
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+	&:focus-visible + label {
+		// TODO: systematize color
+		outline: 0.2em solid #ff4500;
+	}
+}
+
+:host([checked]) {
+	label {
+		background-color: var(--radio_border-color, var(--dark));
+		color: var(--light);
+	}
+}
+
+label {
+	grid-area: 1 / 1 / 1 / -1;
+	justify-self: end;
+	padding-inline: var(--radio_label-padding-inline-start) $radio_inline-padding;
+	cursor: pointer;
+	color: var(--radio_color);
+
+	border: 0.1em solid var(--radio_border-color, var(--dark));
+	border-radius: 0.2em;
+
+	z-index: -1;
+}
