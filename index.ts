@@ -8,4 +8,4 @@ import Radio from "./src/components/Radio/Radio.component";
 import BaseCustomEl from "./src/components/Base/Base";
 import { define } from "./src/utils/decorators/define/Define";
 
-export { ExpandoCard, Slider, BaseCustomEl, Tabs, Tab, MenuButton, Radio, define };
+export { define, ExpandoCard, Slider, BaseCustomEl, Tabs, Tab, MenuButton, Radio,  };
