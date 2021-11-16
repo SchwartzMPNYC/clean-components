@@ -1,0 +1,112 @@
+// TODO: need to systematize all the colors
+
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+
+:host {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5em;
+
+	width: fit-content;
+
+	border-radius: 0.2em;
+
+	cursor: pointer;
+}
+
+:host(:focus-visible) {
+	outline: 0.2em solid orangered;
+	outline-offset: 0.1em;
+}
+
+:host([reversed]) {
+	flex-direction: row-reverse;
+}
+
+:host([column]) {
+	flex-direction: column;
+	height: unset;
+}
+
+:host([reversed][column]) {
+	flex-direction: column-reverse;
+}
+
+:host([vertical]) {
+	#switch-wrapper {
+		height: 3.5em;
+		width: 2em;
+		flex-direction: column;
+	}
+}
+:host([aria-pressed="true"]) {
+	#switch-thumb::before {
+		content: "\2713";
+	}
+
+	.switch-thumb-spacer {
+		&.start {
+			flex: 0;
+		}
+
+		&.end {
+			flex: 2;
+		}
+	}
+}
+
+:host([aria-pressed="false"]) #switch-wrapper {
+	#switch-thumb::before {
+		content: "\00D7";
+	}
+
+	.switch-thumb-spacer {
+		&.start {
+			flex: 2;
+		}
+
+		&.end {
+			flex: 0;
+		}
+	}
+}
+
+#switch-wrapper {
+	background-color: var(--light);
+	border: 0.2em solid var(--dark);
+	height: 2em;
+	width: 3.5em;
+
+	border-radius: 1em;
+
+	display: flex;
+	align-items: center;
+
+	user-select: none;
+}
+
+#switch-thumb {
+	border-radius: 50%;
+	height: 95%;
+	aspect-ratio: 1;
+	background-color: var(--dark);
+	flex: 0;
+	transition: all 0.2s;
+
+	&::before {
+		content: "\2013";
+		color: var(--light);
+		text-align: center;
+		display: block;
+		font-weight: bold;
+	}
+}
+
+.switch-thumb-spacer {
+	flex: 1;
+	transition: all 0.2s;
+}

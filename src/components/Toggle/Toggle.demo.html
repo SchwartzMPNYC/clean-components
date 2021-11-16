@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
+		<script src="./Toggle.component.ts" type="module"></script>
+	</head>
+	<body>
+		<playground-wrapper component-name="Toggle">
+			<h2>Default</h2>
+			<!-- TODO: document pressed attribute/property -->
+			<figure>
+				<div class="fig-content-wrapper">
+					<clean-toggle pressed="false">Lights</clean-toggle>
+					<clean-toggle>Camera</clean-toggle>
+					<clean-toggle pressed="true">Action</clean-toggle>
+				</div>
+			</figure>
+
+			<h2>Styled</h2>
+			<!-- TODO: document parts css variables -->
+			<style>
+				.styled::part(switch thumb)::before {
+					content: none;
+				}
+
+				.styled::part(switch) {
+					--light: #7fffd4;
+					--dark: #3008a0;
+				}
+
+				.even-sizing {
+					flex: 1;
+					justify-content: center;
+				}
+			</style>
+			<figure>
+				<div class="fig-content-wrapper">
+					<clean-toggle class="styled" pressed="false">Lights</clean-toggle>
+					<clean-toggle class="styled">Camera</clean-toggle>
+					<clean-toggle class="styled" pressed="true">Action</clean-toggle>
+				</div>
+			</figure>
+
+			<!-- TODO: document layout+direction attrs -->
+			<h2>Lable layouts</h2>
+			<figure>
+				<div class="fig-content-wrapper">
+					<div style="display: flex; justify-content: space-around">
+						<clean-toggle>Default</clean-toggle>
+						<clean-toggle column>Column</clean-toggle>
+						<clean-toggle reversed column>Reversed column</clean-toggle>
+						<clean-toggle reversed>Reversed</clean-toggle>
+					</div>
+				</div>
+			</figure>
+
+			<h2>Toggle direction</h2>
+			<figure>
+				<div class="fig-content-wrapper">
+					<div style="display: flex; justify-content: space-around">
+						<clean-toggle class="even-sizing">Default</clean-toggle>
+						<clean-toggle class="even-sizing" vertical>Vertical</clean-toggle>
+						<clean-toggle class="even-sizing" vertical column>Vertical column</clean-toggle>
+					</div>
+				</div>
+			</figure>
+		</playground-wrapper>
+	</body>
+</html>

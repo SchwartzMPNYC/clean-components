@@ -4,8 +4,9 @@ import Tabs from "./src/components/Tabs/Tabs.component";
 import Tab from "./src/components/Tabs/Tab.component";
 import MenuButton from "./src/components/MenuButton/MenuButton.component";
 import Radio from "./src/components/Radio/Radio.component";
+import Toggle from "./src/components/Toggle/Toggle.component";
 
 import BaseCustomEl from "./src/components/Base/Base";
 import { define } from "./src/utils/decorators/define/Define";
 
-export { define, ExpandoCard, Slider, BaseCustomEl, Tabs, Tab, MenuButton, Radio,  };
+export { define, ExpandoCard, Slider, BaseCustomEl, Tabs, Tab, MenuButton, Radio, Toggle };
