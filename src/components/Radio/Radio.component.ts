@@ -58,22 +58,26 @@ export default class Radio extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 			case "ArrowDown":
 			case "ArrowRight": {
 				const radioGroup = this.radioGroup;
-				radioGroup[(this._indexInRadioGroup + 1) % radioGroup.length].radio.focus();
+				const newRadio = radioGroup[(this._indexInRadioGroup + 1) % radioGroup.length];
+				newRadio.radio.focus();
+				newRadio.checked = true;
 				break;
 			}
 			case "ArrowUp":
 			case "ArrowLeft": {
 				const radioGroup = this.radioGroup;
 				const indexInGroup = this._indexInRadioGroup;
-				radioGroup[indexInGroup === 0 ? radioGroup.length - 1 : indexInGroup - 1].radio.focus();
+				const newRadio = radioGroup[indexInGroup === 0 ? radioGroup.length - 1 : indexInGroup - 1];
+				newRadio.radio.focus();
+				newRadio.checked = true;
 				break;
 			}
 		}
 	};
 
 	private _handleFocusIn = ({ relatedTarget }: FocusEvent) => {
-		const relatedIsRadio = relatedTarget instanceof Radio
-		if (!this.checked && (!relatedIsRadio || (relatedIsRadio && !this.radioGroup.includes(relatedTarget as Radio))) )
+		const relatedIsRadio = relatedTarget instanceof Radio;
+		if (!this.checked && (!relatedIsRadio || (relatedIsRadio && !this.radioGroup.includes(relatedTarget))))
 			Radio.radios.find(radio => radio.name === this.name && radio.checked)?.radio.focus();
 	};
 }
