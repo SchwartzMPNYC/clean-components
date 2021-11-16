@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
+		<script src="./Table.component.ts" type="module"></script>
+	</head>
+	<body>
+		<playground-wrapper component-name="Table">
+
+			<style>
+				h2 {
+					display: inline-block;
+					/* padding-inline-start: 1em; */
+					position: sticky;
+					left: 0;
+				}
+			</style>
+
+			<clean-table sticky-cols="2">
+				<h2 slot="caption">Table with 2 sticky cols</h2>
+			</clean-table>
+
+			<script>
+				const generateJunkData = (rows, cells) => {
+					const data = [];
+					for (let r = 0; r < rows; r++)
+						data.push([...[...Array(cells).keys()].map(() => Math.random() * 10_000)]);
+
+					return data;
+				};
+
+				const generateHeaders = (colsCount) => {
+					return Array(colsCount).fill('Header').map((header, i) => ({name: `${header} ${i}`, sortable: i < 6}));
+				} 
+
+				const rowCount = 50;
+				const colCount = 20;
+				document.querySelector("clean-table").tabularData = generateJunkData(rowCount, colCount);
+				
+				// not sure what's going on here, but without the timeout this just overwrites the getter
+				setTimeout(() => 
+					document.querySelector("clean-table").headerConfig = generateHeaders(colCount)
+				);
+			</script>
+		</playground-wrapper>
+	</body>
+</html>

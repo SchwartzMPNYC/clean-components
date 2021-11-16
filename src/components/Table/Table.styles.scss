@@ -1,0 +1,68 @@
+$border: 0.1em solid var(--dark);
+
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+
+:host {
+	display: block;
+	width: fit-content;
+	max-width: 100%;
+	overflow: auto;
+	// border-inline: $border;
+	position: relative;
+}
+
+table {
+	border-spacing: 0;
+}
+
+caption {
+	text-align: start;
+}
+
+tr {
+	border: $border;
+
+	&:last-child td {
+		border-block: $border;
+	}
+}
+
+th {
+	background-color: var(--light);
+
+	button {
+		all: unset;
+
+		&::after {
+			content: "\21F5";
+		}
+
+		&.asc::after {
+			content: "\25B2";
+		}
+		&.desc::after {
+			content: "	\25BC";
+		}
+	}
+}
+
+td {
+	padding: 0.1em 0.2em;
+	border-inline-end: $border;
+	border-block-start: $border;
+	background-color: var(--light);
+
+	&:first-child {
+		border-inline-start: $border;
+	}
+}
+
+.sticky {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+}
