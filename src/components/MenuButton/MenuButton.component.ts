@@ -17,10 +17,9 @@ const stateKeys = [
 	styles,
 	observedAttributes: ["expanded"],
 	stateKeys,
+	booleanReflect: ["expanded", "open-up"],
 })
 export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private static booleanReflect = ["expanded", "open-up"];
-
 	private _toggle: HTMLElement = this.shadow.querySelector("#toggle");
 	private _list: HTMLElement = this.shadow.querySelector("[role='menu']");
 	private _childrenSlot: HTMLSlotElement = this.shadow.querySelector('slot[name="list-items"]');

@@ -10,13 +10,11 @@ const stateKeys = ["value", "min", "max", "step", "label"] as const;
 	styles,
 	observedAttributes: ["value", "min", "max", "step", "label"],
 	stateKeys,
+	reflect: ["min", "max", "step"],
 })
 export default class CleanSlider extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	private rangeInput: HTMLInputElement = this.shadow.querySelector('[type="range"]');
 	private numberInput: HTMLInputElement = this.shadow.querySelector('[type="number"]');
-
-	// this makes it sprout min, max, step even if the attrs aren't set explicitly
-	private static reflect = ["min", "max", "step"];
 
 	public label: string;
 

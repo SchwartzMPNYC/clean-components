@@ -1,8 +1,8 @@
 const prepStyleSheet = (targetSheet) => {
 	const constructedSheet = new CSSStyleSheet();
 
-    // @ts-expect-error
     // TODO: fix typing
+    // @ts-expect-error typing - replace sync not added
 	constructedSheet.replaceSync(targetSheet);
 
 	return constructedSheet;

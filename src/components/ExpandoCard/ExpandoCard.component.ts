@@ -10,9 +10,9 @@ const stateKeys = ["open", "content", "summary"] as const;
 	styles,
 	observedAttributes: ["open"],
 	stateKeys,
+	booleanReflect: ["open"]
 })
 export default class ExpandoCard extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private static booleanReflect = ["open"];
 	private _detailsEl: HTMLDetailsElement = this.shadow.querySelector("details");
 
 	public contentEl: HTMLDivElement = this._detailsEl.querySelector(".details-content");

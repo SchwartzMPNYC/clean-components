@@ -15,9 +15,9 @@ export type TabselectedstatechangeEventDetails = {
 	styles,
 	observedAttributes,
 	stateKeys,
+	booleanReflect: ["selected"],
 })
 export default class Tab extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private static booleanReflect = ["selected"];
 	public selected: boolean = this.hasAttribute("selected");
 
 	connectedCallback() {

@@ -10,11 +10,10 @@ const stateKeys = ["selectedIndex", "manualActivation"] as const;
 	styles,
 	observedAttributes,
 	stateKeys,
+	reflect: ["selected-index"],
+	booleanReflect: ["manual-activation"],
 })
 export default class Tabs extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private static reflect = ["selected-index"];
-	private static booleanReflect = ["manual-activation"];
-
 	private tabs: TabChild[];
 	private focusIndex = 0;
 

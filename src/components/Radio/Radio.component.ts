@@ -10,11 +10,10 @@ const stateKeys = ["checked", "disabled", "name", "labelContent"] as const;
 	styles,
 	observedAttributes: ["checked", "disabled", "name"],
 	stateKeys,
+	booleanReflect: ["checked", "disabled"],
+	reflect: ["name"],
 })
 export default class Radio extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private static booleanReflect = ["checked", "disabled"];
-	private static reflect = ["name"];
-
 	private static radios: Radio[] = [];
 	private radio: HTMLInputElement = this.shadow.querySelector("input");
 
