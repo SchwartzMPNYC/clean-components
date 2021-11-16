@@ -54,7 +54,7 @@ export default class Tab extends BaseCustomEl<{ [key in typeof stateKeys[number]
 		tab.removeAttribute("clean-selected");
 	}
 
-	static tabPreselectedState(tab): boolean {
+	static tabPreselectedState(tab: TabChild): boolean {
 		return (tab as Tab).selected ?? tab.hasAttribute("clean-selected");
 	}
 
