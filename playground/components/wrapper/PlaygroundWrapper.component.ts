@@ -12,22 +12,8 @@ const stateKeys = ["componentName"] as const;
 export default class PlaygroundWrapper extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	static playgroundSheet: CSSStyleSheet;
 
-	get componentName(): string {
-		return this.state.componentName;
-	}
-
 	set componentName(name: string) {
 		this.state.componentName = name;
 		document.title = `${name} - Documentation`;
-	}
-
-	attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
-		if (oldVal !== newVal) {
-			switch (name) {
-				case "component-name":
-					this.componentName = newVal;
-					break;
-			}
-		}
 	}
 }
