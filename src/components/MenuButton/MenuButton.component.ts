@@ -47,21 +47,28 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 		// This caught me by surprise looking at the aria 1.2 authoring practices draft, but:
 		// > When the menu is displayed, the element with role button has aria-expanded set to true. When the menu is hidden, it is recommended that aria-expanded is not present.
 		// > https://www.w3.org/TR/wai-aria-practices-1.2/#menu
+		if (this.state.expanded === newState) return;
 		this.state.expanded = newState || null;
 
 		if (newState) {
 			window.addEventListener("keydown", this._handleWindowEscPress);
 
+			const rect = this._list.getBoundingClientRect();
 			if (this.openUp) {
-				const { bottom, height } = this._list.getBoundingClientRect();
+				const { bottom, height } = rect;
 				this.openUp = bottom + height - this._toggle.getBoundingClientRect().height > window.innerHeight;
 			} else {
-				this.openUp = this._list.getBoundingClientRect().bottom > window.innerHeight;
+				this.openUp = rect.bottom > window.innerHeight;
+			}
+
+			if (rect.left <= 0) {
+				this._list.style.setProperty("--offset", `${rect.left}px`);
 			}
 		} else {
 			window.removeEventListener("keydown", this._handleWindowEscPress);
 			this._highlightedItemIndex = null;
 			this._currentHighlighted?.setAttribute("part", "menuitem");
+			this._list.style.removeProperty("--offset");
 		}
 	}
 
@@ -135,36 +142,44 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 		}
 	};
 
-	private _handleListKeydown = ({ key }: KeyboardEvent) => {
-		switch (key) {
+	private _handleListKeydown = (event: KeyboardEvent) => {
+		switch (event.key) {
 			case "ArrowDown":
+				event.preventDefault();
 				this._highlightedItemIndex = (this._highlightedItemIndex + 1) % this.listItems.length;
 				break;
 			case "ArrowUp":
+				event.preventDefault();
 				this._highlightedItemIndex =
 					this._highlightedItemIndex !== 0 ? this._highlightedItemIndex - 1 : this.listItems.length - 1;
 				break;
 			case "Home":
+				event.preventDefault();
 				this._highlightedItemIndex = 0;
 				break;
 			case "End":
+				event.preventDefault();
 				this._highlightedItemIndex = this.listItems.length - 1;
 				break;
 			case " ":
+				event.preventDefault();
+			// eslint-disable-next-line no-fallthrough
 			case "Enter":
 				this._currentHighlighted.click();
 				break;
 		}
 	};
 
-	private _handleToggleKeydown = ({ key }: KeyboardEvent) => {
-		switch (key) {
+	private _handleToggleKeydown = (event: KeyboardEvent) => {
+		switch (event.key) {
 			case "ArrowDown":
+				event.preventDefault();
 				this._highlightedItemIndex = 0;
 				this.expanded = true;
 				this._list.focus();
 				break;
 			case "ArrowUp":
+				event.preventDefault();
 				this._highlightedItemIndex = this.listItems.length - 1;
 				this.expanded = true;
 				this._list.focus();
@@ -172,7 +187,7 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 		}
 	};
 
-	private _dispatchMenuItemClick = ({ target: buttonClicked }) => {
+	private _dispatchMenuItemClick = ({ target: buttonClicked }: HTMLElementEvent<HTMLElement, MouseEvent>) => {
 		this.dispatch("menuitemclick", { buttonClicked });
 	};
 
@@ -183,7 +198,7 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 		}
 	};
 
-	private handleFocusout = ({ relatedTarget }: FocusEvent) => {
-		this.expanded = this.shadow.contains(relatedTarget as Node);
+	private handleFocusout = ({ relatedTarget }: FocusEvent & { relatedTarget: HTMLElement }) => {
+		this.expanded = this.shadow.contains(relatedTarget);
 	};
 }

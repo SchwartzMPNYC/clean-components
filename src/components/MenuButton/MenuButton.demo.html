@@ -5,8 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
-		<link rel="stylesheet" href="../../../playground/playground.scss" />
 		<script src="./MenuButton.component.ts" type="module"></script>
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
+		<link rel="stylesheet" href="./MenuButton.demo.scss" />
 	</head>
 	<body>
 		<playground-wrapper component-name="MenuButton">
@@ -22,7 +23,9 @@
 							<span>Really</span>
 							<span>Cool</span>
 							<span>List of items</span>
-							<button onclick="alert('This function stays in place.')">I'm an actual button</button>
+							<button class="func-programatic-add" onclick="alert('This function stays in place.')">
+								I'm an actual button
+							</button>
 							<a href="../../../playground.html">Back to home page</a>
 						</slot>
 					</clean-menu-button>
@@ -144,21 +147,6 @@
 
 			<h3>Styled example</h3>
 
-			<style>
-				clean-menu-button.custom-colors {
-					--menu-color: #27531c;
-					--menu-bg-color: #d1f7a6;
-
-					align-self: center;
-				}
-				clean-menu-button.custom-colors::part(menuitem) {
-					--menu-bg-color: #d0ffe9;
-				}
-				clean-menu-button.custom-colors {
-					--menu-button_list-item--highlighted_bg-color: #20473f;
-				}
-			</style>
-
 			<figure>
 				<figcaption>A menu button and the custom css that has been applied to it.</figcaption>
 				<div class="fig-content-wrapper">
@@ -166,14 +154,11 @@
 clean-menu-button.custom-colors {
 	--menu-color: #27531c;
 	--menu-bg-color: #d1f7a6;
+	--menu-button_list-item--highlighted_bg-color: #20473f;
 }
 
 clean-menu-button.custom-colors::part(menuitem) {
 	--menu-bg-color: #d0ffe9;
-}
-
-clean-menu-button.custom-colors {
-	--menu-button_list-item--highlighted_bg-color: #20473f;
 }
 						</code></pre>
 
@@ -185,7 +170,10 @@ clean-menu-button.custom-colors {
 							<span>Really</span>
 							<span>Cool</span>
 							<span>List of items</span>
-							<button onclick="alert('Functions placed on these elements in the markup will be kept.')">
+							<button
+								class="func-programatic-add"
+								onclick="alert('Functions placed on these elements in the markup will be kept.')"
+							>
 								I'm an actual button
 							</button>
 							<a href="../../../playground.html">Back to home page</a>
@@ -239,6 +227,41 @@ clean-menu-button.custom-colors {
 				<code>data-*</code> attributes on your menu items to keep track of them.
 			</p>
 
+			<h2>Split button</h2>
+
+			<figure>
+				<figcaption>Split button</figcaption>
+				<div class="fig-content-wrapper" style="text-align: center">
+					<button id="split-button-main">Split button</button
+					><clean-menu-button id="split-button-menu" split>
+						<span id="split-button-menu-name" hidden>Additional items</span>
+						<span aria-labelledby="split-button-main split-button-menu-name">▼</span>
+
+						<slot slot="list-items">
+							<span>Split list item 1</span>
+							<span>Split list item 2</span>
+							<span>Split list item 3</span>
+							<span>Split list item 4</span>
+						</slot>
+					</clean-menu-button>
+				</div>
+			</figure>
+
+			<p>
+				If you want a split button you can put the <code>split</code> boolean attribute on the host, which will
+				remove the inline-start border and border-radii.
+			</p>
+			<p>
+				If you want to style your main action button to match the default menu button, you can use the
+				<code>menu-button_split-main</code> SCSS mixins from <code>MenuButton.styles.scss</code>:
+			</p>
+			<p>Additionally, make sure to set the following CSS Custom Properties:</p>
+			<ul>
+				<li><code>--menu-color</code></li>
+				<li><code>--menu-bg-color</code></li>
+				<li><code>--menu-button__toggle_border</code></li>
+			</ul>
+
 			<script>
 				document.querySelectorAll("clean-menu-button").forEach(menu =>
 					menu.addEventListener("menuitemclick", ({ detail: { buttonClicked } }) => {
@@ -246,7 +269,7 @@ clean-menu-button.custom-colors {
 					})
 				);
 
-				document.querySelectorAll("clean-menu-button button").forEach(menuitem => {
+				document.querySelectorAll("clean-menu-button .func-programatic-add").forEach(menuitem => {
 					menuitem.addEventListener("click", () =>
 						alert("Events can be added to child buttons programmatically as well.")
 					);

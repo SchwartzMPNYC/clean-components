@@ -1,3 +1,37 @@
+@mixin menu-button_list-item-and-toggle {
+	all: unset;
+	box-sizing: border-box;
+	appearance: none;
+	margin: 0;
+	padding: 0.2em 0.3em;
+	border: none;
+	background-color: var(--menu-bg-color);
+	color: var(--menu-color);
+}
+
+@mixin menu-button_buttons {
+	border: var(--menu-button__toggle_border);
+	border-radius: 0.2em;
+
+	&:focus-visible {
+		// TODO: systematize color
+		outline: 2px solid orangered;
+	}
+}
+
+@mixin menu-button_split-menu-toggle {
+	border-start-start-radius: 0;
+	border-end-start-radius: 0;
+	border-inline-start-width: 0;
+}
+
+@mixin menu-button_split-main {
+	@include menu-button_list-item-and-toggle;
+	@include menu-button_buttons;
+	border-start-end-radius: 0;
+	border-end-end-radius: 0;
+}
+
 *,
 ::before,
 ::after {
@@ -9,7 +43,7 @@
 	--menu-bg-color: var(--light);
 
 	--menu-button__default-borders: 0.1em solid var(--menu-color);
-	--menu-button__toggle_border: var(--menu-button__default-borders);
+	--menu-button__toggle_border: var(--menu-button__default-borders, 0.1em solid var(--menu-color));
 	--menu-button__list_border: var(--menu-button__default-borders);
 	--menu-button__list-item_internal-border: 0.05em solid var(--menu-color);
 
@@ -25,6 +59,7 @@
 	padding: 0;
 	margin: 0;
 	width: max-content;
+	min-width: 100%;
 	border: var(--menu-button__list_border);
 	border-radius: 0.2em;
 	position: absolute;
@@ -39,14 +74,7 @@
 }
 
 %menu-item-and-any-buttons {
-	all: unset;
-	box-sizing: border-box;
-	appearance: none;
-	margin: 0;
-	padding: 0.2em 0.3em;
-	border: none;
-	background-color: var(--menu-bg-color);
-	color: var(--menu-color);
+	@include menu-button_list-item-and-toggle;
 }
 
 button {
@@ -54,12 +82,16 @@ button {
 }
 
 #toggle {
-	border: var(--menu-button__toggle_border);
-	border-radius: 0.2em;
+	@include menu-button_buttons;
+}
 
-	&:focus-visible {
-		// TODO: systematize color
-		outline: 2px solid orangered;
+:host([split]) {
+	#toggle {
+		@include menu-button_split-menu-toggle;
+	}
+
+	[role="menu"] {
+		inset-inline: auto var(--offset, 0);
 	}
 }
 

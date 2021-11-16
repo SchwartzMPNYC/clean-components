@@ -1,0 +1,23 @@
+@use "MenuButton.styles.scss" as menubutton;
+
+* {
+	box-sizing: border-box;
+}
+
+clean-menu-button.custom-colors {
+	--menu-color: #27531c;
+	--menu-bg-color: #d1f7a6;
+	--menu-button_list-item--highlighted_bg-color: #20473f;
+
+	&::part(menuitem) {
+		--menu-bg-color: #d0ffe9;
+	}
+}
+
+#split-button-main {
+	--menu-color: var(--dark);
+	--menu-bg-color: var(--light);
+	--menu-button__toggle_border: 0.1em solid var(--menu-color);
+
+	@include menubutton.menu-button_split-main;
+}
