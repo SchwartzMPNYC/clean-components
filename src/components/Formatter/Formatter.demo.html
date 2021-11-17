@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
+		<script src="./Formatter.component.ts" type="module"></script>
+	</head>
+	<body>
+		<playground-wrapper component-name="Formatter">
+			<style>
+				div {
+					margin-block: 1rem;
+					border: 0.1em solid var(--dark);
+					padding: 0.3em;
+				}
+			</style>
+
+			<clean-formatter hidden>
+				<template slot="template">
+					<style>
+						span {
+							color: #1e2f30;
+							background-color: #f0ffff;
+						}
+					</style>
+					<span><slot></slot></span>
+				</template>
+
+				<template slot="template">
+					<link rel="stylesheet" href="./Formmatter.demo.externalstyles.scss" />
+					<button onclick="console.log(this.children[0].assignedNodes()[0].textContent.trim())">
+						<slot></slot>
+					</button>
+				</template>
+
+				<template slot="template">
+					<div style="display: flex; flex-direction: column">
+						<slot name="top"></slot>
+						<slot name="bottom"></slot>
+					</div>
+				</template>
+
+				<template slot="template">
+					<slot data-number-formatter-location="en-US" data-number-formatter-currency="USD"></slot>
+				</template>
+
+				<template slot="template">
+					<slot
+						data-number-formatter-location="en-US"
+						data-number-formatter-currency="USD"
+						data-number-formatter-max-fraction="0"
+					></slot>
+				</template>
+
+				<template slot="template">
+					<slot data-number-formatter-location="en-US" data-number-formatter-min-fraction="1"></slot>
+				</template>
+
+				<template slot="template">
+					<div style="display: flex; flex-direction: column">
+						<slot name="top"></slot>
+						<slot
+							name="bottom"
+							data-number-formatter-location="en-US"
+							data-number-formatter-currency="USD"
+							data-number-formatter-max-fraction="0"
+						></slot>
+					</div>
+				</template>
+			</clean-formatter>
+
+			<div>
+				<clean-formatter> First formatter: first template </clean-formatter>
+			</div>
+
+			<div>
+				<clean-formatter template="1"> Second formatter: second template </clean-formatter>
+				<clean-formatter template="1"> Third formatter: second template </clean-formatter>
+			</div>
+
+			<div>
+				<clean-formatter template="2">
+					<span slot="top">Fourth formatter</span>
+					<span slot="bottom">Third template</span>
+				</clean-formatter>
+			</div>
+
+			<div>
+				<clean-formatter template="3">402342.75557</clean-formatter>
+			</div>
+
+			<div>
+				<clean-formatter template="4">402342.75557</clean-formatter>
+			</div>
+
+			<div>
+				<clean-formatter template="5">15225</clean-formatter>
+			</div>
+
+			<div>
+				<clean-formatter template="6">
+					<span slot="top">This is a lot of money:</span>
+					<span slot="bottom">402342.75557</span>
+				</clean-formatter>
+			</div>
+		</playground-wrapper>
+	</body>
+</html>
