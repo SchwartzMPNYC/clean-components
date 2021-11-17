@@ -23,12 +23,21 @@
 			<h2>Styled</h2>
 			<!-- TODO: document parts css variables -->
 			<style>
+				.styled::part(wrapper) {
+					width: 5rem;
+					height: 1.5rem;
+				}
+
 				.styled::part(switch thumb)::before {
 					content: none;
 				}
 
 				.styled::part(switch) {
 					--light: #7fffd4;
+					--dark: #055333;
+				}
+
+				.styled::part(thumb) {
 					--dark: #3008a0;
 				}
 
