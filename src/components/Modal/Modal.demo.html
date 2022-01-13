@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
+		<script src="./Modal.component.ts" type="module"></script>
+	</head>
+	<body>
+		<playground-wrapper component-name="Modal">
+			<style>
+				#modal-1::part(dialog) {
+					border-radius: 2rem;
+					padding: 0.5rem 1rem;
+					color: var(--light);
+					background-color: var(--dark);
+				}
+
+				#modal-1::part(title) {
+					font-style: italic;
+				}
+
+				#modal-1::part(content) {
+					font-size: 1.2em;
+					text-shadow: 2px 2px 8px #62deed;
+				}
+
+				#modal-1::part(button) {
+					color: var(--light);
+					padding: .25em;
+				}
+
+				#modal-1::part(button):hover {
+					--light: #a5edf5;
+				}
+
+				#modal-1::part(button):focus-visible {
+					--light: #a5edf5;
+					outline: 3px auto var(--light);
+				}
+
+				.divider {
+					border-top: 2px solid var(--light);
+					margin-block-start: 0.5rem;
+				}
+			</style>
+
+			<clean-modal id="modal-1">
+				<span slot="title">Custom styling galore</span>
+				<span slot="close">Close modal</span>
+				<div slot="content">
+					<div aria-hidden="true" class="divider"></div>
+					<p>I'm not saying this looks good. I'm just showing how you can do a lot with this.</p>
+					<p>
+						Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum velit quas eum eveniet
+						voluptates culpa temporibus blanditiis sapiente itaque. Nostrum reiciendis dicta natus cum
+						officia ipsam assumenda, necessitatibus voluptate nesciunt.
+					</p>
+
+					<div style="display: flex; gap: 0.5em; justify-content: flex-end; padding-right: 2rem">
+						<button>Button 1</button>
+						<button>Button 2</button>
+					</div>
+				</div>
+			</clean-modal>
+
+			<clean-modal id="modal-2"></clean-modal>
+
+			<button id="modal-1-trigger">Open custom modal</button>
+			<button id="modal-2-trigger">Open default modal</button>
+			<script>
+				document.querySelector("#modal-1-trigger").addEventListener("click", () => {
+					document.querySelector("#modal-1").show();
+				});
+
+				document.querySelector("#modal-2-trigger").addEventListener("click", () => {
+					document.querySelector("#modal-2").show();
+				});
+			</script>
+		</playground-wrapper>
+	</body>
+</html>

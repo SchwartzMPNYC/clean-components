@@ -1,0 +1,65 @@
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+
+.backdrop {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: #fffb;
+}
+
+:host([open]) {
+	.backdrop {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+[role="dialog"] {
+	display: grid;
+	grid-template-areas: "title close" "content content";
+	grid-template-columns: auto auto;
+	align-items: baseline;
+	width: clamp(80ch, 50%, 95vw);
+	padding: 1rem 2rem;
+	border: 2px solid;
+	border-radius: 0.2rem;
+
+	&:focus-visible {
+		outline-color: deepskyblue;
+	}
+}
+
+#modal-title {
+	grid-area: title;
+}
+
+button {
+	all: unset;
+	appearance: none;
+	align-items: center;
+	cursor: pointer;
+	display: inline-flex;
+	grid-area: close;
+	justify-content: center;
+	justify-self: end;
+	max-width: fit-content;
+	min-width: 3rem;
+	padding: 0;
+
+	&:focus-visible {
+		outline: 3px auto deepskyblue;
+	}
+}
+
+.content {
+	grid-area: content;
+}
+
+h1 {
+	margin: 0;
+}
