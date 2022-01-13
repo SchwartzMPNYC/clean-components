@@ -3,6 +3,8 @@ import BaseCustomEl from "../Base/Base";
 import markup from "./Modal.template.html";
 import styles from "./Modal.styles.scss";
 
+import dialogMarkup from "./Modal.dialog.template.html";
+
 // TODO: set focus return target as part of state?
 // TODO: allow focus return target id as an attribute?
 const observedAttributes = ["open"];
@@ -26,8 +28,19 @@ const ALL_FOCUSABLE_SELECTOR =
 export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	public static focusableQuerySelectorString = ALL_FOCUSABLE_SELECTOR;
 
-	private _closeButton = this.shadow.querySelector("button");
-	private _dialog = this.shadow.querySelector<HTMLDivElement>('[role="dialog"]');
+	private static _dialogTemplateContent: DocumentFragment;
+
+	static {
+		const template = document.createElement('template');
+		template.innerHTML = dialogMarkup;
+		this._dialogTemplateContent = template.content;
+	}
+
+	// private _template = this.shadow.querySelector("template");
+	private _backdrop = this.shadow.querySelector<HTMLDivElement>(".backdrop");
+
+	private _closeButton: HTMLButtonElement;
+	private _dialog: HTMLDivElement;
 
 	public focusReturnTarget: HTMLElement;
 
@@ -39,6 +52,11 @@ export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 		} else {
 			this._closeButton.focus();
 		}
+	}
+
+	private _findElements() {
+		this._closeButton = this.shadow.querySelector("button");
+		this._dialog = this.shadow.querySelector<HTMLDivElement>('[role="dialog"]');
 	}
 
 	private _escHandler = ({ key }: KeyboardEvent) => {
@@ -59,9 +77,16 @@ export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 	 * @param focusReturnTarget The HTMLElement to focus when the modal closes. Defaults to the active element.
 	 */
 	public show(focusReturnTarget = document.activeElement as HTMLElement) {
+		if (this.state.open) return;
 		this.focusReturnTarget = focusReturnTarget;
 		this.state.open = true;
+
+		this._backdrop.append(Modal._dialogTemplateContent.cloneNode(true));
+
+		this._findElements();
+		this._closeButton.addEventListener("click", () => this.hide());
 		this._dialog.focus();
+
 		document.body.addEventListener("keydown", this._escHandler);
 	}
 
@@ -72,10 +97,8 @@ export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 	public hide(focusReturnTarget = this.focusReturnTarget) {
 		focusReturnTarget?.focus?.();
 		this.state.open = false;
-		document.body.removeEventListener("keydown", this._escHandler);
-	}
 
-	connectedCallback() {
-		this._closeButton.addEventListener("click", () => this.hide());
+		this._backdrop.replaceChildren();
+		document.body.removeEventListener("keydown", this._escHandler);
 	}
 }

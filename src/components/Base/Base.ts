@@ -47,7 +47,7 @@ export default abstract class BaseCustomEl<StateKeys extends Record<string, unkn
 		}))(this.constructor as any);
 	}
 
-	protected dispatch(eventName: string, detail, bubbles = false, cancelable = true, composed = false): boolean {
+	protected dispatch(eventName: string, detail: unknown, bubbles = false, cancelable = true, composed = false): boolean {
 		return this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles, composed, cancelable }));
 	}
 

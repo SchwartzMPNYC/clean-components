@@ -87,7 +87,7 @@ export default class Formatter extends BaseCustomEl<{ [key in typeof stateKeys[n
 
 	private _updateContent = () => {
 		this.shadow.append(
-			document.importNode((Formatter.slots[this.templateIndex] as HTMLTemplateElement).content, true)
+			document.importNode((Formatter.slots[this.templateIndex]).content, true)
 		);
 
 		this.shadow.querySelectorAll("slot").forEach(slot => this._allowNextChildSlotUpdate.set(slot, true));
