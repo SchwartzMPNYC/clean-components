@@ -22,7 +22,8 @@
 
 import type BaseCustomEl from "../../components/Base/Base";
 
-const propTransform = (prop: string) => prop.replaceAll(/[A-Z]/g, match => "-" + match.toLowerCase());
+export const propTransform = (prop: string) => prop.replaceAll(/[A-Z]/g, match => "-" + match.toLowerCase());
+export const attrTransform = (prop: string) => prop.replaceAll(/-[a-z]/g, match => match[1].toUpperCase());
 
 interface AttrBinding {
 	point: HTMLElement | Element;

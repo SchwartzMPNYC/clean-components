@@ -1,0 +1,38 @@
+<div id="trigger-wrapper" part="tooltip trigger wrapper">
+	<slot name="trigger" id="trigger-slot">
+		<button id="toggle-tip-trigger" part="tooltip trigger toggletip">
+			<slot name="trigger-content"></slot>
+		</button>
+	</slot>
+</div>
+
+<div class="content-wrapper" part="tooltip content" aria-hidden="true">
+	<svg
+		class="arrow arrow-line"
+		version="1.1"
+		width="10"
+		height="10"
+		xmlns="http://www.w3.org/2000/svg"
+		aria-hidden="true"
+	>
+		<polyline points="10,0 0,5 10,10" stroke="var(--tooltip__content-border-color)" stroke-width="1" fill="none" />
+	</svg>
+	<div class="content" role="tooltip" id="content"><slot name="content"></slot></div>
+	<svg
+		class="arrow arrow-fill"
+		version="1.1"
+		width="10"
+		height="10"
+		xmlns="http://www.w3.org/2000/svg"
+		aria-hidden="true"
+	>
+		<polygon
+			points="10,0 0,5 10,10"
+			stroke="var(--tooltip__content-bg-color)"
+			stroke-width="1"
+			fill="var(--tooltip__content-bg-color)"
+		/>
+	</svg>
+</div>
+
+<div aria-live="polite" id="live-region"></div>

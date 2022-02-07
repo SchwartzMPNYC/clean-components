@@ -133,3 +133,10 @@ dd {
 pre {
 	white-space: break-spaces;
 }
+
+.screenreader {
+	position: absolute;
+	width: 0;
+	height: 0;
+	overflow: hidden;
+}

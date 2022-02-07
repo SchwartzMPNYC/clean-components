@@ -1,0 +1,73 @@
+@use "../../utils/styles/_utils";
+
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+
+:host {
+	--tooltip__content-color: var(--dark);
+	--tooltip__content-bg-color: var(--light);
+	--tooltip__content-border-color: var(--dark);
+
+	display: inline;
+}
+
+.content-wrapper {
+	display: flex;
+
+	height: 0;
+	width: 0;
+	overflow: hidden;
+
+	position: fixed;
+	background-color: var(--tooltip__content-bg-color);
+	color: var(--tooltip__content-color);
+
+	isolation: isolate;
+
+	max-width: 97vw;
+
+	@include utils.hostContext([open]) {
+		width: fit-content;
+		height: unset;
+		overflow: unset;
+
+		border: 1px solid var(--tooltip__content-border-color);
+	}
+}
+
+.content {
+	padding: 0.25em;
+	background-color: var(--tooltip__content-bg-color);
+}
+
+#trigger-wrapper {
+	display: inline-block;
+}
+
+.arrow {
+	position: absolute;
+	top: var(--tooltip__content-top);
+	left: var(--tooltip__content-left);
+	align-self: center;
+
+	$rotateFunction: rotate(var(--tooltip__arrow-rotate));
+	$sharedTranslateFunction: translate(var(--tooltip__arrow-adjust, -1px));
+
+	&-line {
+		z-index: -1;
+		transform: #{$rotateFunction} #{$sharedTranslateFunction};
+	}
+	&-fill {
+		transform: #{$rotateFunction} translate(var(--tooltip__arrow-border-width, 2px)) #{$sharedTranslateFunction};
+	}
+}
+
+#live-region {
+	position: absolute;
+	height: 0;
+	width: 0;
+	overflow: hidden;
+}

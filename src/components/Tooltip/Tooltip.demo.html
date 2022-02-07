@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
+		<script src="../Toggle/Toggle.component.ts" type="module"></script>
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
+		<script src="./Tooltip.component.ts" type="module"></script>
+	</head>
+	<body>
+		<playground-wrapper component-name="Tooltip">
+			<style>
+				p ::part(toggletip),
+				.position-grid ::part(toggletip) {
+					display: inline;
+					border: none;
+					background: transparent;
+					color: dodgerblue;
+					font: inherit;
+					padding: 0;
+				}
+
+				.position-grid {
+					display: grid;
+					grid-template-columns: repeat(3, 1fr);
+					grid-template-rows: auto repeat(3, 1fr);
+					gap: 4rem;
+					margin: auto;
+					width: fit-content;
+				}
+
+				.dark-tooltips ::part(content) {
+					--tooltip_color: var(--light);
+					--tooltip-bg-color: var(--light);
+					--tooltip-bg-color: var(--dark);
+				}
+
+				.icon-button,
+				#close-btn-2::part(toggletip) {
+					appearance: none;
+					background-color: transparent;
+					border: 0;
+				}
+
+				#toggle-tip {
+					margin-inline-start: 1ch;
+				}
+
+				#toggle-tip::part(toggletip) {
+					appearance: none;
+					color: blue;
+					border-radius: 50%;
+					background-color: transparent;
+					border: 1px solid blue;
+					aspect-ratio: 1;
+				}
+			</style>
+
+			<p>
+				<span
+					>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse soluta alias nihil non eligendi nam
+					est inventore quasi, eaque nesciunt, unde facilis debitis consectetur quae nisi maxime temporibus
+					placeat et.</span
+				>
+
+				<span>
+					Aliquid incidunt repellat eos
+					<clean-tooltip id="tooltip-1" inline-end block-start descriptive>
+						<span slot="trigger-content">Hoverable Tooltip</span>
+						<span slot="content">
+							An element who's content will be displayed on mouseover or focus, and should usually be
+							associated with the trigger with aria.
+						</span>
+					</clean-tooltip>
+
+					libero vel facere unde dolor aut enim similique, animi maxime atque voluptatibus nobis architecto
+					minima culpa recusandae reprehenderit veritatis eum illo quisquam? Similique illo labore ab
+
+					<clean-tooltip id="tooltip-2" clickable>
+						<span slot="trigger-content">Clickable Tooltip</span>
+						<span slot="content"
+							>An element who's content will only be revealed on click. More likely to be a toggle tip so
+							less likely to need to be associated with tooltip content using aria.
+						</span> </clean-tooltip
+					>!</span
+				>
+			</p>
+
+			<!-- Complex content that requires manual association -->
+			<!-- Tooltip -->
+
+			<div>
+				<clean-tooltip block-end>
+					<div style="display: flex; flex-direction: column; gap: 0.5rem" slot="trigger">
+						<label for="input">An input</label>
+						<input type="text" id="input" aria-describedby="extra-info-example" />
+					</div>
+					<span slot="content" id="extra-info-example">
+						Here's some extra information about this input!
+					</span>
+				</clean-tooltip>
+			</div>
+
+			<div class="position-grid">
+			<!-- Complex content that requires manual association -->
+			<!-- Tooltip -->
+				<clean-tooltip style="grid-column: 1 / 4" delay="30">
+					<clean-toggle
+						id="dark-toggle"
+						pressed="false"
+						aria-describedby="dark-toolips-tooltip"
+						slot="trigger"
+					>
+						Dark tooltips
+					</clean-toggle>
+					<span slot="content" id="dark-toolips-tooltip">Grid tooltips only</span>
+				</clean-tooltip>
+
+				<!-- No association -->
+				<!-- Toggle tips -->
+				<clean-tooltip block-start inline-start clickable>
+					<span slot="trigger-content">block-start inline-start Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+				<clean-tooltip block-start clickable>
+					<span slot="trigger-content">block-start Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+				<clean-tooltip block-start inline-end clickable>
+					<span slot="trigger-content">block-start inline-end Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+				<clean-tooltip inline-start clickable>
+					<span slot="trigger-content">inline-start Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+				<clean-tooltip clickable>
+					<span slot="trigger-content">default Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+				<clean-tooltip inline-end clickable>
+					<span slot="trigger-content">inline-end Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+				<clean-tooltip block-end inline-start clickable>
+					<span slot="trigger-content">block-end inline-start Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+				<clean-tooltip block-end clickable>
+					<span slot="trigger-content">block-end Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+				<clean-tooltip block-end inline-end clickable>
+					<span slot="trigger-content">block-end inline-end Tooltip</span>
+					<span slot="content">Tooltip content</span>
+				</clean-tooltip>
+			</div>
+
+			<!-- First close button is associatted manually, the second in component. -->
+			<!-- Tool tips -->
+			<div style="display: flex; justify-content: space-around">
+				<clean-tooltip>
+					<button class="icon-button" aria-labelledby="icon-btn-text" slot="trigger">
+						<svg version="1.1" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+							<line x1="10" x2="30" y1="10" y2="30" stroke="currentcolor" stroke-width="1" />
+							<line x1="30" x2="10" y1="10" y2="30" stroke="currentcolor" stroke-width="1" />
+						</svg>
+					</button>
+					<span slot="content" id="icon-btn-text">Close</span>
+				</clean-tooltip>
+
+				<clean-tooltip id="close-btn-2" labelling>
+					<svg version="1.1" width="40" height="40" xmlns="http://www.w3.org/2000/svg" slot="trigger-content">
+						<line x1="10" x2="30" y1="10" y2="30" stroke="currentcolor" stroke-width="1" />
+						<line x1="30" x2="10" y1="10" y2="30" stroke="currentcolor" stroke-width="1" />
+					</svg>
+					<span slot="content">Close</span>
+				</clean-tooltip>
+			</div>
+
+			<!-- Toggle tips -->
+			<div style="display: flex; place-content: center">
+				Baby Yoda
+				<clean-tooltip id="toggle-tip" clickable offset="20">
+					<span class="screenreader" slot="trigger-content">Learn more about Baby Yoda</span>
+					<span icon slot="trigger-content" aria-hidden="true">&#8263;</span>
+					<span slot="content">His real name is Grogu and he is adorable.</span>
+				</clean-tooltip>
+			</div>
+
+			<script>
+				document
+					.querySelector("#dark-toggle")
+					.addEventListener("toggle", ({ detail: { pressed } }) =>
+						document.querySelector(".position-grid").classList.toggle("dark-tooltips", pressed)
+					);
+			</script>
+		</playground-wrapper>
+	</body>
+</html>
