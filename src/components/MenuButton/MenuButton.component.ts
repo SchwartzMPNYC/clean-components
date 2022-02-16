@@ -50,7 +50,7 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 		this.state.expanded = newState || null;
 
 		if (newState) {
-			window.addEventListener("keydown", this._handleWindowEscPress);
+			this.listen(window, "keydown", this._handleWindowEscPress);
 
 			const rect = this._list.getBoundingClientRect();
 			if (this.openUp) {
@@ -80,15 +80,15 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 	connectedCallback() {
 		this.expanded = false;
 
-		this._toggle.addEventListener("click", this._handleToggleClick);
-		this._toggle.addEventListener("keydown", this._handleToggleKeydown);
+		this.listen(this._toggle, "click", this._handleToggleClick);
+		this.listen(this._toggle, "keydown", this._handleToggleKeydown);
 
-		this._list.addEventListener("click", this._dispatchMenuItemClick);
-		this._list.addEventListener("keydown", this._handleListKeydown);
+		this.listen(this._list, "click", this._dispatchMenuItemClick);
+		this.listen(this._list, "keydown", this._handleListKeydown);
 
-		this._childrenSlot.addEventListener("slotchange", this._handleListItemSlotChange);
+		this.listen(this._childrenSlot, "slotchange", this._handleListItemSlotChange);
 
-		this.shadow.addEventListener("focusout", this.handleFocusout);
+		this.listen(this, "focusout", this.handleFocusout);
 	}
 
 	disconnectedCallback() {

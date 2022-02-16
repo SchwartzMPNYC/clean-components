@@ -29,7 +29,7 @@
 
 				#modal-1::part(button) {
 					color: var(--light);
-					padding: .25em;
+					padding: 0.25em;
 				}
 
 				#modal-1::part(button):hover {
@@ -78,6 +78,11 @@
 				document.querySelector("#modal-2-trigger").addEventListener("click", () => {
 					document.querySelector("#modal-2").show();
 				});
+
+				addEventListener("clean-modal-before-open", console.log);
+				addEventListener("clean-modal-opened", console.log);
+				addEventListener("clean-modal-before-close", console.log);
+				addEventListener("clean-modal-closed", console.log);
 			</script>
 		</playground-wrapper>
 	</body>

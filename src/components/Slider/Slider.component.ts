@@ -13,8 +13,8 @@ const stateKeys = ["value", "min", "max", "step", "label"] as const;
 	reflect: ["min", "max", "step"],
 })
 export default class CleanSlider extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private rangeInput: HTMLInputElement = this.shadow.querySelector('[type="range"]');
-	private numberInput: HTMLInputElement = this.shadow.querySelector('[type="number"]');
+	private rangeInput = this.shadow.querySelector<HTMLInputElement>('[type="range"]');
+	private numberInput = this.shadow.querySelector<HTMLInputElement>('[type="number"]');
 
 	public label: string;
 
@@ -61,13 +61,8 @@ export default class CleanSlider extends BaseCustomEl<{ [key in typeof stateKeys
 	}
 
 	connectedCallback() {
-		this.rangeInput.addEventListener("input", this._handleInput);
-		this.numberInput.addEventListener("input", this._handleInput);
-	}
-
-	disconnectedCallback() {
-		this.rangeInput.removeEventListener("input", this._handleInput);
-		this.numberInput.removeEventListener("input", this._handleInput);
+		this.listen(this.rangeInput, "input", this._handleInput);
+		this.listen(this.numberInput, "input", this._handleInput);
 	}
 
 	private _handleInput = event => {

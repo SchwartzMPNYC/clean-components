@@ -14,9 +14,9 @@
 			<!-- TODO: document pressed attribute/property -->
 			<figure>
 				<div class="fig-content-wrapper">
-					<clean-toggle pressed="false">Lights</clean-toggle>
-					<clean-toggle>Camera</clean-toggle>
-					<clean-toggle pressed="true">Action</clean-toggle>
+					<clean-toggle>Lights</clean-toggle>
+					<clean-toggle mixed>Camera</clean-toggle>
+					<clean-toggle pressed>Action</clean-toggle>
 				</div>
 			</figure>
 
@@ -48,9 +48,9 @@
 			</style>
 			<figure>
 				<div class="fig-content-wrapper">
-					<clean-toggle class="styled" pressed="false">Lights</clean-toggle>
-					<clean-toggle class="styled">Camera</clean-toggle>
-					<clean-toggle class="styled" pressed="true">Action</clean-toggle>
+					<clean-toggle class="styled">Lights</clean-toggle>
+					<clean-toggle class="styled" mixed>Camera</clean-toggle>
+					<clean-toggle class="styled" pressed>Action</clean-toggle>
 				</div>
 			</figure>
 
@@ -77,6 +77,16 @@
 					</div>
 				</div>
 			</figure>
+
+			<script>
+				document
+					.querySelectorAll("clean-toggle")
+					.forEach(toggle =>
+						toggle.addEventListener("clean-toggle-change", ({ target, detail: { pressed, mixed } }) =>
+							console.log({ target, pressed, mixed })
+						)
+					);
+			</script>
 		</playground-wrapper>
 	</body>
 </html>

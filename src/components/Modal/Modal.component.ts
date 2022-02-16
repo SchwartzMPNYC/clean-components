@@ -31,7 +31,7 @@ export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 	private static _dialogTemplateContent: DocumentFragment;
 
 	static {
-		const template = document.createElement('template');
+		const template = document.createElement("template");
 		template.innerHTML = dialogMarkup;
 		this._dialogTemplateContent = template.content;
 	}
@@ -81,13 +81,15 @@ export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 		this.focusReturnTarget = focusReturnTarget;
 		this.state.open = true;
 
+		this.dispatch("clean-modal-before-open", this, true);
 		this._backdrop.append(Modal._dialogTemplateContent.cloneNode(true));
+		this.dispatch("clean-modal-opened", this, true);
 
 		this._findElements();
-		this._closeButton.addEventListener("click", () => this.hide());
+		this.listen(this._closeButton, "click", this._arrowHide);
 		this._dialog.focus();
 
-		document.body.addEventListener("keydown", this._escHandler);
+		this.listen(document.body, "keydown", this._escHandler);
 	}
 
 	/**
@@ -95,10 +97,15 @@ export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 	 * @param focusReturnTarget The HTMLElement to focus when the modal closes. Defaults to this.focusReturnTarget.
 	 */
 	public hide(focusReturnTarget = this.focusReturnTarget) {
+		if (!this.state.open) return;
 		focusReturnTarget?.focus?.();
 		this.state.open = false;
 
+		this.dispatch("clean-modal-before-close", this, true);
 		this._backdrop.replaceChildren();
+		this.dispatch("clean-modal-closed", this, true);
 		document.body.removeEventListener("keydown", this._escHandler);
 	}
+
+	private _arrowHide = () => this.hide();
 }

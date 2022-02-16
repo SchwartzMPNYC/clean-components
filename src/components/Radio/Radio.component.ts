@@ -35,9 +35,9 @@ export default class Radio extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 	}
 
 	connectedCallback() {
-		this.radio.addEventListener("change", () => (this.checked = this.radio.checked));
-		this.radio.addEventListener("keydown", this._handleKeydown);
-		this.radio.addEventListener("focusin", this._handleFocusIn);
+		this.listen(this.radio, "change", this._syncFromNativeRadio);
+		this.listen(this.radio, "keydown", this._handleKeydown);
+		this.listen(this.radio, "focusin", this._handleFocusIn);
 		Radio.radios.push(this);
 	}
 
@@ -51,6 +51,10 @@ export default class Radio extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 			.filter(radio => radio !== this && radio.name === this.name && radio.checked)
 			.forEach(radio => (radio.checked = false));
 	}
+
+	private _syncFromNativeRadio = () => {
+		this.checked = this.radio.checked;
+	};
 
 	private _handleKeydown = ({ key }: KeyboardEvent): void => {
 		switch (key) {

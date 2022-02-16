@@ -32,9 +32,8 @@
 				}
 
 				.dark-tooltips ::part(content) {
-					--tooltip_color: var(--light);
-					--tooltip-bg-color: var(--light);
-					--tooltip-bg-color: var(--dark);
+					--tooltip__content-color: var(--light);
+					--tooltip__content-bg-color: var(--dark);
 				}
 
 				.icon-button,
@@ -104,9 +103,9 @@
 			</div>
 
 			<div class="position-grid">
-			<!-- Complex content that requires manual association -->
-			<!-- Tooltip -->
-				<clean-tooltip style="grid-column: 1 / 4" delay="30">
+				<!-- Complex content that requires manual association -->
+				<!-- Tooltip -->
+				<clean-tooltip style="grid-column: 1 / 4">
 					<clean-toggle
 						id="dark-toggle"
 						pressed="false"
@@ -193,9 +192,10 @@
 			<script>
 				document
 					.querySelector("#dark-toggle")
-					.addEventListener("toggle", ({ detail: { pressed } }) =>
-						document.querySelector(".position-grid").classList.toggle("dark-tooltips", pressed)
-					);
+					.addEventListener("clean-toggle-change", ({ detail: { pressed } }) => {
+						console.log(pressed);
+						document.querySelector(".position-grid").classList.toggle("dark-tooltips", pressed);
+					});
 			</script>
 		</playground-wrapper>
 	</body>
