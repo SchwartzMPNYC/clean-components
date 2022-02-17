@@ -10,7 +10,7 @@ const stateKeys = ["open", "content", "summary"] as const;
 	styles,
 	observedAttributes: ["open"],
 	stateKeys,
-	booleanReflect: ["open"]
+	booleanReflect: ["open"],
 })
 export default class ExpandoCard extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	private _detailsEl: HTMLDetailsElement = this.shadow.querySelector("details");
@@ -20,6 +20,10 @@ export default class ExpandoCard extends BaseCustomEl<{ [key in typeof stateKeys
 	public open = this.hasAttribute("open");
 
 	connectedCallback() {
-		this._detailsEl.addEventListener("toggle", () => (this.open = this._detailsEl.open));
+		this.listen(this._detailsEl, "toggle", this._syncNativeDetailsWithWrapper);
 	}
+
+	private _syncNativeDetailsWithWrapper = () => {
+		this.open = this._detailsEl.open;
+	};
 }

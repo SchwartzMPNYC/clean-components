@@ -29,10 +29,10 @@ export default class Formatter extends BaseCustomEl<{ [key in typeof stateKeys[n
 	}
 
 	connectedCallback() {
-		this._slot.addEventListener("slotchange", this._updateSlot);
+		this.listen(this._slot, "slotchange", this._updateSlot);
 		if (Formatter.slots.length) this._updateContent();
 
-		this.shadow.addEventListener("slotchange", this._format);
+		this.listen(this, "slotchange", this._format);
 	}
 
 	// This whole damn thing could probably be skipped if FireFox wasn't the only browser to support
@@ -86,9 +86,7 @@ export default class Formatter extends BaseCustomEl<{ [key in typeof stateKeys[n
 	};
 
 	private _updateContent = () => {
-		this.shadow.append(
-			document.importNode((Formatter.slots[this.templateIndex]).content, true)
-		);
+		this.shadow.append(document.importNode(Formatter.slots[this.templateIndex].content, true));
 
 		this.shadow.querySelectorAll("slot").forEach(slot => this._allowNextChildSlotUpdate.set(slot, true));
 	};

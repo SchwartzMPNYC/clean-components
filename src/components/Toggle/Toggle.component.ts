@@ -28,8 +28,8 @@ export default class Toggle extends BaseCustomEl<{ [key in typeof stateKeys[numb
 	}
 
 	connectedCallback() {
-		this.addEventListener("click", this._toggle);
-		this.addEventListener("keydown", this._handleKeyDown);
+		this.listen(this, "click", this._togglePressed);
+		this.listen(this, "keydown", this._handleKeyDown);
 	}
 
 	private _handleKeyDown(event: HTMLElementEvent<Toggle, KeyboardEvent>) {

@@ -50,7 +50,7 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 		this.state.expanded = newState || null;
 
 		if (newState) {
-			window.addEventListener("keydown", this._handleWindowEscPress);
+			this.listen(window, "keydown", this._handleWindowEscPress);
 
 			const rect = this._list.getBoundingClientRect();
 			if (this.openUp) {
@@ -64,7 +64,7 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 				this._list.style.setProperty("--offset", `${rect.left}px`);
 			}
 		} else {
-			window.removeEventListener("keydown", this._handleWindowEscPress);
+			this.stopListening(window, "keydown", this._handleWindowEscPress);
 			this._highlightedItemIndex = null;
 			this._currentHighlighted?.setAttribute("part", "menuitem");
 			this._list.style.removeProperty("--offset");
@@ -80,30 +80,15 @@ export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[
 	connectedCallback() {
 		this.expanded = false;
 
-		this._toggle.addEventListener("click", this._handleToggleClick);
-		this._toggle.addEventListener("keydown", this._handleToggleKeydown);
+		this.listen(this._toggle, "click", this._handleToggleClick);
+		this.listen(this._toggle, "keydown", this._handleToggleKeydown);
 
-		this._list.addEventListener("click", this._dispatchMenuItemClick);
-		this._list.addEventListener("keydown", this._handleListKeydown);
+		this.listen(this._list, "click", this._dispatchMenuItemClick);
+		this.listen(this._list, "keydown", this._handleListKeydown);
 
-		this._childrenSlot.addEventListener("slotchange", this._handleListItemSlotChange);
+		this.listen(this._childrenSlot, "slotchange", this._handleListItemSlotChange);
 
-		this.shadow.addEventListener("focusout", this.handleFocusout);
-	}
-
-	disconnectedCallback() {
-		this._toggle.removeEventListener("click", this._handleToggleClick);
-		this._toggle.removeEventListener("keydown", this._handleToggleKeydown);
-
-		this._list.removeEventListener("click", this._dispatchMenuItemClick);
-		this._list.removeEventListener("keydown", this._handleListKeydown);
-
-		this._childrenSlot.removeEventListener("slotchange", this._handleListItemSlotChange);
-
-		this.shadow.removeEventListener("focusout", this.handleFocusout);
-
-		// In case this gets removed from DOM while menu is open
-		window.removeEventListener("click", this._handleWindowEscPress);
+		this.listen(this, "focusout", this.handleFocusout);
 	}
 
 	// This is the function that actually inserts our list items where they need to go.

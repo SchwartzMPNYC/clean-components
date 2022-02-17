@@ -130,11 +130,11 @@ export default class Tooltip extends BaseCustomEl<{ [key in typeof stateKeys[num
 
 		if (newState) {
 			this._positionOnScreen();
-			window.addEventListener("keydown", this._closeOnEsc);
+			this.listen(window, "keydown", this._closeOnEsc);
 		} else {
 			this._anchor.style.cssText = "";
-			window.removeEventListener("keydown", this._closeOnEsc);
-			removeEventListener("click", this._closeClick);
+			this.stopListening(window, "keydown", this._closeOnEsc);
+			this.stopListening(window, "click", this._closeClick);
 		}
 
 		if (this.isToggleTip) {
@@ -169,19 +169,19 @@ export default class Tooltip extends BaseCustomEl<{ [key in typeof stateKeys[num
 		this.state.hoverable = openOnOverOrFocus;
 
 		if (openOnOverOrFocus) {
-			this._triggerWrapper.addEventListener("mouseenter", this._mouseEnter);
-			this._triggerWrapper.addEventListener("focusin", this._mouseEnter);
-			this._triggerWrapper.addEventListener("mouseleave", this._mouseLeave);
-			this._triggerWrapper.addEventListener("focusout", this._mouseLeave);
+			this.listen(this._triggerWrapper, "mouseenter", this._mouseEnter);
+			this.listen(this._triggerWrapper, "focusin", this._mouseEnter);
+			this.listen(this._triggerWrapper, "mouseleave", this._mouseLeave);
+			this.listen(this._triggerWrapper, "focusout", this._mouseLeave);
 
-			this._toggleTipBtn.addEventListener("click", this._readIntoLiveRegion);
+			this.listen(this._toggleTipBtn, "click", this._readIntoLiveRegion);
 		} else {
-			this._triggerWrapper.removeEventListener("mouseenter", this._mouseEnter);
-			this._triggerWrapper.removeEventListener("focusin", this._mouseEnter);
-			this._triggerWrapper.removeEventListener("mouseleave", this._mouseLeave);
-			this._triggerWrapper.removeEventListener("focusout", this._mouseLeave);
+			this.stopListening(this._triggerWrapper, "mouseenter", this._mouseEnter);
+			this.stopListening(this._triggerWrapper, "focusin", this._mouseEnter);
+			this.stopListening(this._triggerWrapper, "mouseleave", this._mouseLeave);
+			this.stopListening(this._triggerWrapper, "focusout", this._mouseLeave);
 
-			this._toggleTipBtn.removeEventListener("click", this._readIntoLiveRegion);
+			this.stopListening(this._toggleTipBtn, "click", this._readIntoLiveRegion);
 		}
 	}
 
@@ -200,9 +200,9 @@ export default class Tooltip extends BaseCustomEl<{ [key in typeof stateKeys[num
 		this.state.clickable = openOnClick;
 
 		if (openOnClick) {
-			this._triggerWrapper.addEventListener("click", this._toggleOnClick);
+			this.listen(this._triggerWrapper, "click", this._toggleOnClick);
 		} else {
-			this._triggerWrapper.removeEventListener("click", this._toggleOnClick);
+			this.stopListening(this._triggerWrapper, "click", this._toggleOnClick);
 		}
 	}
 
@@ -443,20 +443,7 @@ export default class Tooltip extends BaseCustomEl<{ [key in typeof stateKeys[num
 	private _toggleOnClick = () => {
 		if (!this.open) {
 			this.open = true;
-			// "The heck is he doing here" you ask...
-			// I want the close handler to only fire once, so I'm using the once property
-			// But the click event will bubble up to the window and trigger from the original opening
-			// So I can either:
-			// 	1) wait a tick with setTimeout
-			// 	2) use that event hitting the window object to set the listener I actually want
-			// 	3) prevent default on the click, but then opening one tooltip doesn't close another
-			window.addEventListener(
-				"click",
-				() => {
-					addEventListener("click", this._closeClick);
-				},
-				{ once: true }
-			);
+			setTimeout(() => this.listen(window, "click", this._closeClick));
 		}
 	};
 

@@ -56,7 +56,8 @@ export default class Tabs extends BaseCustomEl<{ [key in typeof stateKeys[number
 			}
 
 			// Tabs will emit this event when selected, so watch for that
-			tab.addEventListener(
+			this.listen(
+				tab,
 				"tabselectedstatechange",
 				({ detail }: CustomEvent<TabselectedstatechangeEventDetails>) => {
 					this.selectedIndex = detail.isAttrRemoval ? null : tabIndex;
@@ -65,7 +66,7 @@ export default class Tabs extends BaseCustomEl<{ [key in typeof stateKeys[number
 		});
 
 		// The keyboard interactions actually take place on this element rather than the tabs
-		this.addEventListener("keydown", this.handleKeypress);
+		this.listen(this, "keydown", this.handleKeypress);
 	}
 
 	private handleKeypress({ key }: KeyboardEvent): void {
