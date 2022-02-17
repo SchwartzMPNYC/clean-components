@@ -14,6 +14,11 @@ export interface FullShadowRoot extends ShadowRoot {
 	host: HTMLElement;
 }
 
+export interface EventListenerMeta {
+	element: HTMLElement | (Window & typeof globalThis);
+	eventName: string;
+	handler: (...args: unknown[]) => unknown;
+}
 
 export default abstract class BaseCustomEl<StateKeys extends Record<string, unknown>> extends HTMLElement {
 	protected state: StateKeys;
@@ -41,11 +46,17 @@ export default abstract class BaseCustomEl<StateKeys extends Record<string, unkn
 			template,
 			constructedSheet,
 			stateKeys,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		}))(this.constructor as any);
 	}
 
-	protected dispatch(eventName: string, detail: unknown, bubbles = false, cancelable = true, composed = false): boolean {
+	protected dispatch(
+		eventName: string,
+		detail: unknown,
+		bubbles = false,
+		cancelable = true,
+		composed = false
+	): boolean {
 		return this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles, composed, cancelable }));
 	}
 
@@ -105,5 +116,27 @@ export default abstract class BaseCustomEl<StateKeys extends Record<string, unkn
 				// console.log(name, newVal);
 				break;
 		}
+	}
+
+	private listeners: EventListenerMeta[] = [];
+	protected listen(
+		element: HTMLElement | (Window & typeof globalThis),
+		eventName: string,
+		handler: (...args: unknown[]) => unknown
+	) {
+		element.addEventListener(eventName, handler);
+		this.listeners.push({ element, eventName, handler });
+	}
+
+	protected stopListening(
+		element: HTMLElement | (Window & typeof globalThis),
+		eventName: string,
+		handler: (...args: unknown[]) => unknown
+	) {
+		element.removeEventListener(eventName, handler);
+	}
+
+	disconnectedCallback() {
+		this.listeners.forEach(({ element, eventName, handler }) => this.stopListening(element, eventName, handler));
 	}
 }
