@@ -31,7 +31,7 @@
 
 				<template slot="template">
 					<link rel="stylesheet" href="./Formmatter.demo.externalstyles.scss" />
-					<button onclick="console.log(this.children[0].assignedNodes()[0].textContent.trim())">
+					<button onclick="alert(this.children[0].assignedNodes()[0].textContent.trim())">
 						<slot></slot>
 					</button>
 				</template>
