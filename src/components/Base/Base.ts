@@ -1,4 +1,4 @@
-import stateMachine from "../../utils/StateMachine/stateMachine";
+import stateMachine, { attrTransform } from "../../utils/StateMachine/stateMachine";
 
 export interface BaseProps<StateKeysLiteral> {
 	reflect?: string[];
@@ -14,8 +14,6 @@ export interface FullShadowRoot extends ShadowRoot {
 	host: HTMLElement;
 }
 
-// TODO: This should probably go with propsTransformer
-const attrTransform = (attr: string): string => attr.replaceAll(/-([a-z])/g, match => match[1].toUpperCase());
 
 export default abstract class BaseCustomEl<StateKeys extends Record<string, unknown>> extends HTMLElement {
 	protected state: StateKeys;
