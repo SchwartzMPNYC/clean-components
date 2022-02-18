@@ -1,0 +1,142 @@
+import { define } from "../../utils/decorators/define/Define";
+import BaseCustomEl from "../Base/Base";
+import markup from "./ProgressBar.template.html";
+import styles from "./ProgressBar.styles.scss";
+
+const observedAttributes = ["value", "min", "max", "value-min-text", "value-max-text", "indeterminate"];
+const stateKeys = ["value", "min", "max", "valueMinText", "valueMaxText", "indeterminate"] as const;
+const booleanReflect = ["indeterminate"];
+
+@define("clean-progressbar", {
+	markup,
+	styles,
+	observedAttributes,
+	stateKeys,
+	booleanReflect,
+})
+export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
+	private static _fillPercentageCssVariable = "--clean-progress-bar_completion";
+
+	private _bar = this.shadow.querySelector<HTMLDivElement>("#progress");
+	private _markerSlot = this.shadow.querySelector<HTMLSlotElement>('slot[name="marker"]');
+	private _markers: Element[];
+
+	set value(value: number | string) {
+		const numberVal = Number(value);
+
+		if (numberVal === this.value) return;
+
+		if (isNaN(numberVal)) {
+			this.removeAttribute("aria-valuenow");
+		} else {
+			this.state.value = numberVal;
+			this.indeterminate = false;
+
+			this._setFillPercentageVariable();
+			this.setValueText();
+
+			const stringValue = String(this.value);
+			this._bar.setAttribute("aria-valuenow", stringValue);
+			if (this.hasAttribute("value")) this.setAttribute("value", stringValue);
+		}
+	}
+
+	get value(): number {
+		return this.state.value ?? 0;
+	}
+
+	set min(min: number | string) {
+		const numberMin = Number(min);
+
+		if (numberMin === this.min) return;
+
+		if (isNaN(numberMin)) {
+			this.removeAttribute("aria-valuemin");
+		} else {
+			this.state.min = numberMin;
+
+			const stringMin = String(this.min);
+			this._bar.setAttribute("aria-valuemin", stringMin);
+			if (this.hasAttribute("min")) this.setAttribute("min", stringMin);
+		}
+	}
+
+	get min(): number {
+		return this.state.min ?? 0;
+	}
+
+	set max(max: number | string) {
+		const numberMax = Number(max);
+
+		if (numberMax === this.max) return;
+
+		if (isNaN(numberMax)) {
+			this.removeAttribute("aria-valuemax");
+		} else {
+			this.state.max = numberMax;
+
+			const stringMax = String(this.max);
+			this._bar.setAttribute("aria-valuemax", stringMax);
+			if (this.hasAttribute("max")) this.setAttribute("max", stringMax);
+		}
+	}
+
+	get max(): number {
+		return this.state.max ?? 100;
+	}
+
+	set indeterminate(indeterminate: boolean) {
+		if (indeterminate === this.indeterminate) return;
+		this.state.indeterminate = indeterminate;
+		if (indeterminate) {
+			this.value = null;
+			this._setFillPercentageVariable();
+			this.setValueText();
+		}
+	}
+
+	get valueMinText() {
+		return this.state.valueMinText ?? "Not started";
+	}
+
+	get valueMaxText() {
+		return this.state.valueMinText ?? "Completed";
+	}
+
+	private _handleMarkers = () => {
+		this._markers = this._markerSlot.assignedElements();
+		this.max = this._markers.length + 1;
+		this.min = 0;
+		this._setFillPercentageVariable();
+		this.setValueText();
+	};
+
+	private _setFillPercentageVariable() {
+		if (this.indeterminate) {
+			this._bar.style.removeProperty(ProgressBar._fillPercentageCssVariable);
+		} else if (this._markers?.length) {
+			this._bar.style.setProperty(
+				ProgressBar._fillPercentageCssVariable,
+				`${(this.value / (this.max - 1)) * 100 - 50 / this._markers.length}%`
+			);
+		} else {
+			this._bar.style.setProperty(
+				ProgressBar._fillPercentageCssVariable,
+				`${((this.value - this.min) / (this.max - this.min)) * 100}%`
+			);
+		}
+	}
+
+	connectedCallback() {
+		this.listen(this._markerSlot, "slotchange", this._handleMarkers);
+		this.value ??= this.min;
+	}
+
+	setValueText(userSetText?: string) {
+		if (userSetText) this._bar.setAttribute("aria-valuetext", userSetText);
+		else if (this.indeterminate || !this._markers?.length) this._bar.removeAttribute("aria-valuetext");
+		else if (this.value === 0) this._bar.setAttribute("aria-valuetext", this.valueMinText);
+		else if (this.value === this.max) this._bar.setAttribute("aria-valuetext", this.valueMaxText);
+		else this._bar.setAttribute("aria-valuetext", this._markers[this.value - 1].textContent);
+	}
+}

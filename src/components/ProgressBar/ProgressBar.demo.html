@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="../../../playground/components/wrapper/PlaygroundWrapper.component.ts" type="module"></script>
+		<link rel="stylesheet" href="../../../playground/playground.scss" />
+		<script src="./ProgressBar.component.ts" type="module"></script>
+		<script src="../Slider/Slider.component.ts" type="module"></script>
+		<script src="../Toggle/Toggle.component.ts" type="module"></script>
+	</head>
+	<body>
+		<playground-wrapper component-name="ProgressBar">
+			<style>
+				figure {
+					margin-block-end: 1.5rem;
+				}
+
+				.fig-content-wrapper {
+					display: flex;
+					flex-direction: column;
+					gap: 1rem;
+				}
+			</style>
+			<figure>
+				<figcaption>Default</figcaption>
+
+				<div class="fig-content-wrapper">
+					<clean-progressbar value="50"> Loaded </clean-progressbar>
+				</div>
+			</figure>
+
+			<figure>
+				<figcaption>Dynamic example</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-progressbar id="unloaded" max="10" min="5">
+						Unloaded
+					</clean-progressbar>
+					<clean-slider label="Unloaded value" max="10" min="5" id="unloaded-slider"></clean-slider>
+				</div>
+
+				<script>
+					document
+						.querySelector("#unloaded-slider")
+						.addEventListener(
+							"update",
+							({ detail: { value } }) => (document.querySelector("#unloaded").value = value)
+						);
+				</script>
+			</figure>
+
+			<figure>
+				<figcaption>Segmented examples</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-progressbar value="3">
+						Segmented
+						<div slot="marker">Step 1</div>
+						<div slot="marker">Step 2</div>
+						<div slot="marker">Step 3</div>
+						<div slot="marker">Step 4</div>
+						<div slot="marker">Step 5</div>
+					</clean-progressbar>
+					<clean-progressbar value="3">
+						Segmented
+						<div slot="marker">Sign up</div>
+						<div slot="marker">We get your credit card</div>
+						<div slot="marker">Sell your info</div>
+						<div slot="marker">Profit</div>
+					</clean-progressbar>
+				</div>
+			</figure>
+
+			<figure>
+				<figcaption>Indeterminate state</figcaption>
+				<div class="fig-content-wrapper">
+					<clean-progressbar id="indeterminate" value="70">Indeterminate</clean-progressbar>
+					<clean-toggle id="indeterminate-toggle">Indeterminate</clean-toggle>
+					<script>
+						const indeterminateProgressBar = document.querySelector("#indeterminate");
+						document
+							.querySelector("#indeterminate-toggle")
+							.addEventListener("clean-toggle-change", ({ detail: { pressed } }) => {
+								if (pressed) {
+									indeterminateProgressBar.setAttribute("indeterminate", "");
+								} else {
+									indeterminateProgressBar.value = 70;
+								}
+							});
+					</script>
+				</div>
+			</figure>
+		</playground-wrapper>
+	</body>
+</html>
