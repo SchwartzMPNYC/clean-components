@@ -7,30 +7,33 @@
 :host {
 	display: flex;
 	flex-direction: column;
-	gap: var(--clean-progress-bar__markers-vertical-gap, .25rem)
+	gap: var(--clean-progress-bar__markers-vertical-gap, 0.25rem);
 }
 
 $fill: var(--clean-progress-bar_completion, 0%);
 $fill-color: var(--clean-progress-bar_complete-color, var(--dark));
 $unfill-color: var(--clean-progress-bar_incomplete-color, var(--light));
 
+$bar-height: var(--clean-progress-bar__bar_height, 1.5rem);
+
 #progress {
-	height: var(--clean-progress-bar__bar_height, 1.5rem);
+	height: #{$bar-height};
 	border: var(--clean-progress-bar__bar_border-width, 0.125rem) solid
-		var(--clean-progress-bar__bar_border-color, var(--dark));
-	display: flex;
+		var(--clean-progress-bar__bar_border-color, #{$fill-color});
 	overflow: hidden;
 	position: relative;
-	background: #{$fill-color};
 
-	&::after {
-		content: "";
-		position: absolute;
-		background-color: #{$unfill-color};
-		inset: 0;
-		inset-inline-start: calc(#{$fill}  - var(--offset, 0%));
-		transition: inset-inline-start var(--clean-progress-bar__bar_fill-transition, 0.5s);
-	}
+	background-image: linear-gradient(
+		to right,
+		#{$fill-color},
+		#{$fill-color} 50%,
+		#{$unfill-color} 50%,
+		#{$unfill-color}
+	);
+
+	background-size: 200% #{$bar-height};
+	background-position: calc(100% - $fill);
+	transition: background-position var(--clean-progress-bar__bar_fill-transition, 0.5s);
 }
 
 #markers {
