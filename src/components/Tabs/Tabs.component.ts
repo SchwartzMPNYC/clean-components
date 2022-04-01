@@ -69,19 +69,26 @@ export default class Tabs extends BaseCustomEl<{ [key in typeof stateKeys[number
 		this.listen(this, "keydown", this.handleKeypress);
 	}
 
-	private handleKeypress({ key }: KeyboardEvent): void {
-		switch (key) {
+	private handleKeypress(event: KeyboardEvent): void {
+		// Early return to support browser keyboard shortcuts
+		if (event.altKey) return;
+
+		switch (event.key) {
 			case "ArrowRight":
 				this.focusIndex = (this.focusIndex + 1) % this.tabs.length;
+				event.preventDefault();
 				break;
 			case "ArrowLeft":
 				this.focusIndex = this.focusIndex !== 0 ? this.focusIndex - 1 : this.tabs.length - 1;
+				event.preventDefault();
 				break;
 			case "Home":
 				this.focusIndex = 0;
+				event.preventDefault();
 				break;
 			case "End":
 				this.focusIndex = this.tabs.length - 1;
+				event.preventDefault();
 				break;
 		}
 
