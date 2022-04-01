@@ -7,6 +7,8 @@ const observedAttributes = ["value", "min", "max", "value-min-text", "value-max-
 const stateKeys = ["value", "min", "max", "valueMinText", "valueMaxText", "indeterminate"] as const;
 const booleanReflect = ["indeterminate"];
 
+const markerLineTemplate = '<div aria-hidden="true" part="progressbar marker-lines" class="marker-lines"></div>';
+
 @define("clean-progressbar", {
 	markup,
 	styles,
@@ -16,6 +18,14 @@ const booleanReflect = ["indeterminate"];
 })
 export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	private static _fillPercentageCssVariable = "--clean-progress-bar_completion";
+
+	private static _markerLineTemplateContent: DocumentFragment;
+
+	static {
+		const template = document.createElement("template");
+		template.innerHTML = markerLineTemplate;
+		this._markerLineTemplateContent = template.content;
+	}
 
 	private _bar = this.shadow.querySelector<HTMLDivElement>("#progress");
 	private _markerSlot = this.shadow.querySelector<HTMLSlotElement>('slot[name="marker"]');
@@ -109,6 +119,10 @@ export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys
 		this.min = 0;
 		this._setFillPercentageVariable();
 		this.setValueText();
+
+		this.shadow
+			.querySelector("#marker-lines-wrapper")
+			.replaceChildren(...this._markers.map(() => ProgressBar._markerLineTemplateContent.cloneNode(true)));
 	};
 
 	private _setFillPercentageVariable() {

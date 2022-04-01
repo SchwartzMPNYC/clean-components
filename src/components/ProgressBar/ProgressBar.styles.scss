@@ -5,9 +5,8 @@
 }
 
 :host {
-	display: flex;
-	flex-direction: column;
-	gap: var(--clean-progress-bar__markers-vertical-gap, 0.25rem);
+	display: grid;
+	grid-template-rows: repeat(5, auto);
 }
 
 $fill: var(--clean-progress-bar_completion, 0%);
@@ -15,6 +14,8 @@ $fill-color: var(--clean-progress-bar_complete-color, var(--dark));
 $unfill-color: var(--clean-progress-bar_incomplete-color, var(--light));
 
 $bar-height: var(--clean-progress-bar__bar_height, 1.5rem);
+$marker-line-height: var(--clean-progress-bar__marker_height, 1rem);
+$marker-line-color: var(--clean-progress-bar__marker_color, #{$fill-color});
 
 #progress {
 	height: #{$bar-height};
@@ -36,7 +37,12 @@ $bar-height: var(--clean-progress-bar__bar_height, 1.5rem);
 	transition: background-position var(--clean-progress-bar__bar_fill-transition, 0.5s);
 }
 
+#label,
 #markers {
+	color: var(--clean-progress-bar_color, inherit);
+}
+
+.markers {
 	display: flex;
 	justify-content: space-between;
 }
@@ -44,4 +50,58 @@ $bar-height: var(--clean-progress-bar__bar_height, 1.5rem);
 ::slotted([slot="marker"]) {
 	flex: 1 100%;
 	text-align: center;
+}
+
+.marker-lines {
+	display: flex;
+	place-content: center;
+	flex: 1 100%;
+	min-height: #{$marker-line-height};
+	z-index: 1;
+
+	&::after {
+		content: "";
+		border-inline-start: 2px solid $marker-line-color;
+	}
+}
+
+#progress {
+	grid-row: 2;
+	grid-column: 1 / -1;
+}
+
+#marker-lines-wrapper {
+	display: none;
+	grid-row: 3;
+	grid-column: 1 / -1;
+}
+
+:host([indicators]) {
+	#marker-lines-wrapper {
+		display: flex;
+	}
+}
+
+:host([overlap-indicators]) {
+	#marker-lines-wrapper {
+		display: flex;
+		grid-row: 2 / 3;
+		grid-column: 1 / -1;
+	}
+
+	.marker-lines {
+		min-height: calc(#{$bar-height});
+	}
+}
+
+:host([overlap-indicators-descending]) {
+	#marker-lines-wrapper {
+		display: flex;
+		grid-row: 2 / 3;
+		grid-column: 1 / -1;
+	}
+
+	.marker-lines {
+		min-height: calc(#{$bar-height} + #{$marker-line-height});
+	}
 }

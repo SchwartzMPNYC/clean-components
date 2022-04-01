@@ -1,7 +1,8 @@
-<div id="label">
+<div id="label" part="progressbar label">
 	<slot></slot>
 </div>
-<div id="progress" part="progress progress-bar" role="progressbar" aria-labelledby="label"></div>
-<div id="markers">
+<div id="progress" part="progress progress-bar" role="progressbar" aria-labelledby="label"  part="progressbar bar"></div>
+<div id="marker-lines-wrapper" class="markers marker-line-wrapper"></div>
+<div id="markers" class="markers marker-wrapper" part="progressbar markers">
 	<slot name="marker"></slot>
 </div>
