@@ -5,9 +5,8 @@ import styles from "./Tab.styles.scss";
 const observedAttributes = ["selected"];
 const stateKeys = ["selected"] as const;
 
-export type TabChild = HTMLElement | Tab;
 export type TabselectedstatechangeEventDetails = {
-	tab: TabChild;
+	tab: Tab;
 	isAttrRemoval?: boolean;
 };
 
@@ -18,50 +17,63 @@ export type TabselectedstatechangeEventDetails = {
 	booleanReflect: ["selected"],
 })
 export default class Tab extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	public selected: boolean = this.hasAttribute("selected");
+	private _selected: boolean = this._initSelectionState();
+
+	get selected(): boolean {
+		return this._selected;
+	}
+
+	set selected(selected: boolean) {
+		this.setAttribute("aria-selected", selected ? "true" : "false");
+		this.tabIndex = selected ? 0 : -1;
+		this._selected = selected;
+	}
 
 	connectedCallback() {
-		Tab.initTab(this, this.selected);
+		this.setAttribute("role", "tab");
+		this.selected = this._selected;
+
+		this.listen(this.parentElement, "tabselection", this._listenToParent);
+		this.listen(this, "click", this._handleClick);
+		this.listen(this, "keydown", this._handleKeydown);
 	}
 
 	attributeChangedCallback(name: string, oldVal: string, newVal: string) {
 		if (this.reflecting) return;
 		if (oldVal !== newVal) {
 			if (name === "selected") {
-				Tab.dispatchTabChangeEvent(this, newVal !== "");
+				this._dispatchTabChangeEvent(newVal !== "");
 			}
 		}
 	}
 
-	private static dispatchTabChangeEvent(tab: TabChild, isAttrRemoval?: boolean) {
-		const detail: TabselectedstatechangeEventDetails = { tab, isAttrRemoval };
-		// This is static for the non-clean tab implementation so no custom dispatch function
-		tab.dispatchEvent(new CustomEvent("tabselectedstatechange", { detail }));
+	private _initSelectionState(): boolean {
+		const parentElSelectedIndex = this.parentElement.getAttribute('selected-index');
+
+		if (parentElSelectedIndex) {
+			this.removeAttribute('selected');
+			return this === this.parentElement.children[Number(parentElSelectedIndex)];
+		} else {
+			return this.hasAttribute("selected");
+		}
 	}
 
-	static initTab(tab: TabChild, preselectedState: boolean): void {
-		tab.setAttribute("role", "tab");
-		Tab.setTabState(tab, preselectedState);
-		tab.addEventListener("click", () => Tab.dispatchTabChangeEvent(tab));
-		tab.addEventListener("keydown", event => {
-			if (event.key === " " || event.key === "Enter") {
-				event.preventDefault();
-				Tab.dispatchTabChangeEvent(tab);
-			}
-		});
+	private _listenToParent = ({ detail: { tab } }) => {
+		this.selected = tab === this;
+	};
 
-		// for use in non-library tabs
-		tab.removeAttribute("clean-selected");
-	}
+	private _handleClick = () => {
+		this._dispatchTabChangeEvent();
+	};
 
-	static tabPreselectedState(tab: TabChild): boolean {
-		return (tab as Tab).selected ?? tab.hasAttribute("clean-selected");
-	}
+	private _handleKeydown = (event: KeyboardEvent) => {
+		if (event.key === " " || event.key === "Enter") {
+			event.preventDefault();
+			this._dispatchTabChangeEvent();
+		}
+	};
 
-	static setTabState(tab: TabChild, selected: boolean) {
-		tab.setAttribute("aria-selected", selected ? "true" : "false");
-		tab.tabIndex = selected ? 0 : -1;
-
-		if (tab instanceof Tab) tab.selected = selected;
+	private _dispatchTabChangeEvent(isAttrRemoval?: boolean) {
+		this.dispatch("tabselectedstatechange", { tab: this, isAttrRemoval } as TabselectedstatechangeEventDetails);
 	}
 }
