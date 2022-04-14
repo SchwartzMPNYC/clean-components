@@ -143,7 +143,7 @@ const stateMachine = <StateKeys>(target: BaseCustomEl<Record<string, unknown>>) 
 
 			const transformedProp = propTransform(prop);
 			target.reflecting = true;
-			if (target.baseProperties.reflect?.includes(transformedProp)) target.setAttribute(prop, newVal);
+			if (target.baseProperties.reflect?.includes(transformedProp)) target.setAttribute(transformedProp, newVal);
 
 			if (target.baseProperties.booleanReflect?.includes(transformedProp)) {
 				if (newVal) target.setAttribute(transformedProp, "");
