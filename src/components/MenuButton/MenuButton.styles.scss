@@ -1,3 +1,14 @@
+$menu-color: var(--menu-color, var(--dark));
+$menu-bgcolor: var(--menu-bg-color, var(--light));
+
+$menu-button_list-item--highlighted_bg-color: var(--menu-button_list-item--highlighted_bg-color, #{$menu-color});
+$menu-button_list-item--highlighted_color: var(--menu-button_list-item--highlighted_color, #{$menu-bgcolor});
+
+$menu-button__default-borders: var(--menu-button__default-borders, 0.1em solid #{$menu-color});
+$menu-button__toggle_border: var(--menu-button__toggle_border, #{$menu-button__default-borders});
+$menu-button__list_border: var(--menu-button__list_border, #{$menu-button__default-borders});
+$menu-button__list-item_internal-border: var(--menu-button__list-item_internal-border, 0.05em solid #{$menu-color});
+
 @mixin menu-button_list-item-and-toggle {
 	all: unset;
 	box-sizing: border-box;
@@ -5,12 +16,12 @@
 	margin: 0;
 	padding: 0.2em 0.3em;
 	border: none;
-	background-color: var(--menu-bg-color);
-	color: var(--menu-color);
+	background-color: $menu-bgcolor;
+	color: $menu-color;
 }
 
 @mixin menu-button_buttons {
-	border: var(--menu-button__toggle_border);
+	border: $menu-button__toggle_border;
 	border-radius: 0.2em;
 
 	&:focus-visible {
@@ -39,15 +50,7 @@
 }
 
 :host {
-	--menu-color: var(--dark);
-	--menu-bg-color: var(--light);
-
-	--menu-button__default-borders: 0.1em solid var(--menu-color);
-	--menu-button__toggle_border: var(--menu-button__default-borders, 0.1em solid var(--menu-color));
-	--menu-button__list_border: var(--menu-button__default-borders);
-	--menu-button__list-item_internal-border: 0.05em solid var(--menu-color);
-
-	display: inline-block;
+	display: inline-flex;
 	position: relative;
 }
 
@@ -60,16 +63,17 @@
 	margin: 0;
 	width: max-content;
 	min-width: 100%;
-	border: var(--menu-button__list_border);
+	border: $menu-button__list_border;
 	border-radius: 0.2em;
 	position: absolute;
 	inset-inline-start: 0;
+	inset-block-start: 100%;
 
 	&:focus-visible [part*="highlighted"],
 	&:not(:focus-visible) :hover {
 		// TODO: these are ridiculous variable names
-		background-color: var(--menu-button_list-item--highlighted_bg-color, var(--menu-color));
-		color: var(--menu-button_list-item--highlighted_color, var(--menu-bg-color));
+		background-color: $menu-button_list-item--highlighted_bg-color;
+		color: $menu-button_list-item--highlighted_color;
 	}
 }
 
@@ -100,8 +104,8 @@ button {
 	display: flex;
 	width: 100%;
 	border-inline: none;
-	border-block: var(--menu-button__list-item_internal-border);
-	background-color: var(--menu-bg-color);
+	border-block: $menu-button__list-item_internal-border;
+	background-color: $menu-bgcolor;
 	cursor: pointer;
 
 	&:first-child {
@@ -111,4 +115,8 @@ button {
 	&:last-child {
 		border-block-end: none;
 	}
+}
+
+::slotted([slot="split-button-main"]) {
+	@include menu-button_split-main;
 }
