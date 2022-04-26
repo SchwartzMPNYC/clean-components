@@ -1,6 +1,6 @@
 <label for="slider" id="label" part="label">
-	<clean-bind bind="label"></clean-bind>
+	<slot></slot>
 </label>
 
-<input type="number" aria-labelledby="label" data-bind-attr="max min step" part="input number">
-<input type="range" id="slider" data-bind-attr="max min step" part="input range">
+<input type="number" aria-labelledby="label" data-bind-attr="max min step" part="input number" />
+<input type="range" id="slider" data-bind-attr="max min step" part="input range" />
