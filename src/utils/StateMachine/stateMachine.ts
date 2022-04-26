@@ -124,11 +124,12 @@ const stateMachine = <StateKeys>(target: BaseCustomEl<Record<string, unknown>>) 
 			state[prop].slotBindings.forEach((slotBinding: SlotBinding) => {
 				slotBinding.point.assignedNodes().forEach((el: HTMLElement) => el.remove());
 
-				if (typeof newVal === "string") slotBinding.point.replaceChildren(newVal);
-				else if (newVal instanceof Array)
-					slotBinding.point.replaceChildren(...[...newVal].map((node: Node) => node.cloneNode(true)));
-				else slotBinding.point.replaceChildren(newVal.cloneNode());
-
+				if (newVal) {
+					if (typeof newVal === "string") slotBinding.point.replaceChildren(newVal);
+					else if (newVal instanceof Array)
+						slotBinding.point.replaceChildren(...[...newVal].map((node: Node) => node.cloneNode?.(true)));
+					else slotBinding.point.replaceChildren(newVal?.cloneNode(true));
+				}
 				slotBinding.allowNext = false;
 			});
 
