@@ -67,6 +67,7 @@ export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys
 
 			const stringMin = String(this.min);
 			this._bar.setAttribute("aria-valuemin", stringMin);
+			this._setFillPercentageVariable();
 			if (this.hasAttribute("min")) this.setAttribute("min", stringMin);
 		}
 	}
@@ -87,6 +88,7 @@ export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys
 
 			const stringMax = String(this.max);
 			this._bar.setAttribute("aria-valuemax", stringMax);
+			this._setFillPercentageVariable();
 			if (this.hasAttribute("max")) this.setAttribute("max", stringMax);
 		}
 	}
@@ -110,7 +112,7 @@ export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys
 	}
 
 	get valueMaxText() {
-		return this.state.valueMinText ?? "Completed";
+		return this.state.valueMaxText ?? "Completed";
 	}
 
 	private _handleMarkers = () => {
@@ -131,12 +133,12 @@ export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys
 		} else if (this._markers?.length) {
 			this._bar.style.setProperty(
 				ProgressBar._fillPercentageCssVariable,
-				`${(this.value / (this.max - 1)) * 100 - 50 / this._markers.length}%`
+				`${Math.min(Math.max((this.value / (this.max - 1)) * 100 - 50 / this._markers.length, 0), 100)}%`
 			);
 		} else {
 			this._bar.style.setProperty(
 				ProgressBar._fillPercentageCssVariable,
-				`${((this.value - this.min) / (this.max - this.min)) * 100}%`
+				`${Math.min(Math.max(((this.value - this.min) / (this.max - this.min)) * 100, 0), 100)}%`
 			);
 		}
 	}
