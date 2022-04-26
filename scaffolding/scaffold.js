@@ -4,7 +4,7 @@ import { argv, exit } from "process";
 
 import classScaffold from "./classScaffold.mjs";
 import styleScaffold from "./stylesScaffold.mjs";
-import demoScaffold from "./demoScaffold.mjs";
+import storyScaffold from "./storyScaffold.mjs";
 
 const componentName = argv[2];
 
@@ -37,7 +37,7 @@ const files = [
 	{ suffix: "component.ts", scaffold: classScaffold(componentName) },
 	{ suffix: "template.html", scaffold: "<slot></slot>" },
 	{ suffix: "styles.scss", scaffold: styleScaffold },
-	{ suffix: "demo.html", scaffold: demoScaffold(componentName) },
+	{ suffix: "stories.ts", scaffold: storyScaffold(componentName) },
 ];
 
 console.log(`creating folder for ${componentName}`);
