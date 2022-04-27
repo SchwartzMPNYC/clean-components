@@ -35,7 +35,6 @@
 		"babel-loader": "^8.2.4",
 		"css-loader": "^5.2.7",
 		"eslint": "^8.1.0",
-		"html-webpack-plugin": "^5.5.0",
 		"parcel": "^2.0.0",
 		"sass": "^1.50.0",
 		"sass-loader": "^10.1.1",
@@ -47,6 +46,5 @@
 	"module": "dist/module.js",
 	"types": "dist/types.d.ts",
 	"type": "module",
-	"browserslist": "> 0.5%, last 2 versions, not dead",
-	"dependencies": {}
+	"browserslist": "> 0.5%, last 2 versions, not dead"
 }
