@@ -1,4 +1,5 @@
 import { define } from "../../utils/decorators/define/Define";
+import { selector } from "../../utils/decorators/selector";
 import BaseCustomEl from "../Base/Base";
 import markup from "./ExpandoCard.template.html";
 import styles from "./ExpandoCard.styles.scss";
@@ -13,9 +14,11 @@ const stateKeys = ["open", "content", "summary"] as const;
 	booleanReflect: ["open"],
 })
 export default class ExpandoCard extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private _detailsEl: HTMLDetailsElement = this.shadow.querySelector("details");
+	@listener("_syncNativeDetailsWithWrapper", "toggle")
+	@selector("details")
+	private _detailsEl: HTMLDetailsElement;
 
-	public contentEl: HTMLDivElement = this._detailsEl.querySelector(".details-content");
+	@selector(".details-content") public contentEl: HTMLDivElement;
 	public summary: string;
 	public open = this.hasAttribute("open");
 

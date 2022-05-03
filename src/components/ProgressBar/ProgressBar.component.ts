@@ -1,4 +1,5 @@
 import { define } from "../../utils/decorators/define/Define";
+import { selector } from "../../utils/decorators/selector";
 import BaseCustomEl from "../Base/Base";
 import markup from "./ProgressBar.template.html";
 import styles from "./ProgressBar.styles.scss";
@@ -27,8 +28,9 @@ export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys
 		this._markerLineTemplateContent = template.content;
 	}
 
-	private _bar = this.shadow.querySelector<HTMLDivElement>("#progress");
-	private _markerSlot = this.shadow.querySelector<HTMLSlotElement>('slot[name="marker"]');
+	@selector("#progress") private _bar: HTMLDivElement;
+	@selector('slot[name="marker"]') private _markerSlot: HTMLSlotElement;
+	@selector("#marker-lines-wrapper") private _markerLinesWrapper: HTMLDivElement
 	private _markers: Element[];
 
 	set value(value: number | string) {
@@ -122,9 +124,7 @@ export default class ProgressBar extends BaseCustomEl<{ [key in typeof stateKeys
 		this._setFillPercentageVariable();
 		this.setValueText();
 
-		this.shadow
-			.querySelector("#marker-lines-wrapper")
-			.replaceChildren(...this._markers.map(() => ProgressBar._markerLineTemplateContent.cloneNode(true)));
+		this._markerLinesWrapper.replaceChildren(...this._markers.map(() => ProgressBar._markerLineTemplateContent.cloneNode(true)));
 	};
 
 	private _setFillPercentageVariable() {

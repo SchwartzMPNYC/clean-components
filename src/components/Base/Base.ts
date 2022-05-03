@@ -1,3 +1,4 @@
+import { SelectorDecoratorConfig } from "../../utils/decorators/selector";
 import stateMachine, { attrTransform } from "../../utils/StateMachine/stateMachine";
 
 export interface BaseProps<StateKeysLiteral> {
@@ -36,6 +37,36 @@ export default abstract class BaseCustomEl<StateKeys extends Record<string, unkn
 
 		this.state = stateMachine<StateKeys>(this);
 		this._initState();
+
+		this._defineSelectorProperties();
+	}
+
+	private _defineSelectorProperties() {
+		Object.defineProperties(
+			this,
+			Object.getPrototypeOf(this).querySelectList?.reduce(
+				(properties: PropertyDescriptorMap, propertyConfig: SelectorDecoratorConfig) => {
+					const parentToSearch = propertyConfig.searchNonShadow ? this : this.shadow;
+
+					const querySelectorToUse = propertyConfig.all
+						? parentToSearch.querySelectorAll
+						: parentToSearch.querySelector;
+
+					const [getOrValue, getterOrValue] = propertyConfig.asGetter
+						? ["get", () => querySelectorToUse.call(parentToSearch, [propertyConfig.selector])]
+						: ["value", querySelectorToUse.call(parentToSearch, [propertyConfig.selector])];
+
+					properties[propertyConfig.property] = {
+						[getOrValue]: getterOrValue,
+						enumerable: true,
+						configurable: true,
+					};
+
+					return properties;
+				},
+				{}
+			) ?? {}
+		);
 	}
 
 	get baseProperties(): BaseProps<StateKeys> {

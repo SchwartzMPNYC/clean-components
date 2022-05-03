@@ -1,4 +1,5 @@
 import { define } from "../../utils/decorators/define/Define";
+import { selector } from "../../utils/decorators/selector";
 import BaseCustomEl from "../Base/Base";
 import markup from "./Slider.template.html";
 import styles from "./Slider.styles.scss";
@@ -13,8 +14,8 @@ const stateKeys = ["value", "min", "max", "step"] as const;
 	reflect: ["min", "max", "step"],
 })
 export default class CleanSlider extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private rangeInput = this.shadow.querySelector<HTMLInputElement>('[type="range"]');
-	private numberInput = this.shadow.querySelector<HTMLInputElement>('[type="number"]');
+	@selector('[type="range"]') private rangeInput: HTMLInputElement;
+	@selector('[type="number"]') private numberInput: HTMLInputElement;
 
 	public set value(newValue: number) {
 		this.state.value = Number(newValue);

@@ -1,4 +1,5 @@
 import { define } from "../../utils/decorators/define/Define";
+import { selector } from "../../utils/decorators/selector";
 import BaseCustomEl from "../Base/Base";
 import { attrTransform } from "../../utils/StateMachine/stateMachine";
 import markup from "./Tooltip.template.html";
@@ -88,16 +89,16 @@ const booleanReflect = ["open", "hoverable", "clickable", ...arrayOfPositions, "
 	booleanReflect,
 })
 export default class Tooltip extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private _anchor = this.shadow.querySelector<HTMLDivElement>(".content-wrapper");
-	private _arrows = this._anchor.querySelectorAll(".arrow");
+	@selector(".content-wrapper") private _anchor: HTMLDivElement;
+	@selector(".content-wrapper .arrow", { all: true }) private _arrows;
 
-	private _triggerWrapper = this.shadow.querySelector<HTMLDivElement>("#trigger-wrapper");
-	private _tiggerSlot = this.shadow.querySelector<HTMLSlotElement>("#trigger-slot");
+	@selector("#trigger-wrapper") private _triggerWrapper: HTMLDivElement;
+	@selector("#trigger-slot") private _tiggerSlot: HTMLSlotElement;
 
-	private _toggleTipBtn = this.shadow.querySelector<HTMLButtonElement>("#toggle-tip-trigger");
+	@selector("#toggle-tip-trigger") private _toggleTipBtn: HTMLButtonElement;
 
-	private _liveRegion = this.shadow.querySelector<HTMLDivElement>("#live-region");
-	private _content = this.shadow.querySelector<HTMLDivElement>("#content");
+	@selector("#live-region") private _liveRegion: HTMLDivElement;
+	@selector("#content") private _content: HTMLDivElement;
 
 	private _mouseEnterTimeout: number;
 

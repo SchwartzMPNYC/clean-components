@@ -1,4 +1,5 @@
 import { define } from "../../utils/decorators/define/Define";
+import { selector } from "../../utils/decorators/selector";
 import BaseCustomEl from "../Base/Base";
 import markup from "./Modal.template.html";
 import styles from "./Modal.styles.scss";
@@ -36,27 +37,21 @@ export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 		this._dialogTemplateContent = template.content;
 	}
 
-	// private _template = this.shadow.querySelector("template");
-	private _backdrop = this.shadow.querySelector<HTMLDivElement>(".backdrop");
-
-	private _closeButton: HTMLButtonElement;
-	private _dialog: HTMLDivElement;
+	@selector(".backdrop") private _backdrop: HTMLDivElement;
+	@selector("button", { asGetter: true }) private _closeButton: HTMLButtonElement;
+	@selector('[role="dialog"]', { asGetter: true }) private _dialog: HTMLDivElement;
+	@selector(ALL_FOCUSABLE_SELECTOR, { asGetter: true, searchNonShadow: true, all: true })
+	private _modalFocusableChildren: HTMLElement[];
 
 	public focusReturnTarget: HTMLElement;
 
 	// Appears unused because it's being referenced in the template directly.
 	private _redirectFocus(place: string) {
 		if (place === focusRedirectElements.start) {
-			const focusable = this.querySelectorAll<HTMLElement>(Modal.focusableQuerySelectorString);
-			focusable[focusable.length - 1].focus();
+			this._modalFocusableChildren[this._modalFocusableChildren.length - 1].focus();
 		} else {
 			this._closeButton.focus();
 		}
-	}
-
-	private _findElements() {
-		this._closeButton = this.shadow.querySelector("button");
-		this._dialog = this.shadow.querySelector<HTMLDivElement>('[role="dialog"]');
 	}
 
 	private _escHandler = ({ key }: KeyboardEvent) => {
@@ -85,7 +80,7 @@ export default class Modal extends BaseCustomEl<{ [key in typeof stateKeys[numbe
 		this._backdrop.append(Modal._dialogTemplateContent.cloneNode(true));
 		this.dispatch("clean-modal-opened", this, true);
 
-		this._findElements();
+		// this._findElements();
 		this.listen(this._closeButton, "click", this._arrowHide);
 		this._dialog.focus();
 

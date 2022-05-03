@@ -1,4 +1,5 @@
 import { define } from "../../utils/decorators/define/Define";
+import { selector } from "../../utils/decorators/selector";
 import BaseCustomEl from "../Base/Base";
 import markup from "./Radio.template.html";
 import styles from "./Radio.styles.scss";
@@ -15,7 +16,7 @@ const stateKeys = ["checked", "disabled", "name", "labelContent"] as const;
 })
 export default class Radio extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
 	private static radios: Radio[] = [];
-	private radio: HTMLInputElement = this.shadow.querySelector("input");
+	@selector("input") private radio: HTMLInputElement;
 
 	public disabled: boolean;
 	public name: string;

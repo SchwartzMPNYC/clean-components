@@ -1,4 +1,5 @@
 import { define } from "../../utils/decorators/define/Define";
+import { selector } from "../../utils/decorators/selector";
 import BaseCustomEl from "../Base/Base";
 import markup from "./MenuButton.template.html";
 import styles from "./MenuButton.styles.scss";
@@ -20,9 +21,9 @@ const stateKeys = [
 	booleanReflect: ["expanded", "open-up"],
 })
 export default class MenuButton extends BaseCustomEl<{ [key in typeof stateKeys[number]] }> {
-	private _toggle: HTMLElement = this.shadow.querySelector("#toggle");
-	private _list: HTMLElement = this.shadow.querySelector("[role='menu']");
-	private _childrenSlot: HTMLSlotElement = this.shadow.querySelector('slot[name="list-items"]');
+	@selector("#toggle") private _toggle: HTMLElement;
+	@selector("[role='menu']") private _list: HTMLElement;
+	@selector('slot[name="list-items"]') private _childrenSlot: HTMLSlotElement;
 
 	public openUp = false;
 
